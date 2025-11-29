@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 // Available services (uncomment to use):
-// import 'package:min_flutter_template/services/storage_service.dart';
-// import 'package:min_flutter_template/services/network_service.dart';
+// import 'package:jlearn/services/storage_service.dart';
+// import 'package:jlearn/services/network_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,12 +20,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App', // TODO: Change to your app name
+      title: 'JLearn',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2196F3)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'My App'), // TODO: Change to your app name
+      home: const MyHomePage(title: 'JLearn - Japanese Learning'),
     );
   }
 }

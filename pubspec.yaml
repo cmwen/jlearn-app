@@ -1,5 +1,5 @@
-name: min_flutter_template
-description: "A minimal Android Flutter application template - escape Android dependency hell!"
+name: jlearn
+description: "JLearn - Offline Japanese Learning App with AI-generated content"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
