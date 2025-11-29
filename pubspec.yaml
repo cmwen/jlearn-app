@@ -40,6 +40,10 @@ dependencies:
   shared_preferences: ^2.3.0
   # Access to device file system paths (documents, cache, temp directories)
   path_provider: ^2.1.0
+  
+  # Database
+  sqflite: ^2.3.0
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:
