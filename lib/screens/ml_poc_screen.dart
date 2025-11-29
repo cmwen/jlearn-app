@@ -309,7 +309,7 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: _getSeverityColor(wp.severity).withOpacity(0.1),
+        color: _getSeverityColor(wp.severity).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: _getSeverityColor(wp.severity)),
       ),
