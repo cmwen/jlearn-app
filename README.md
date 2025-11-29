@@ -1,6 +1,201 @@
-# Minimal Android App Template
+# 📚 JLearn - Offline Japanese Learning App
 
-A production-ready Android Flutter template with **AI-powered development workflow**, optimized build system, and comprehensive documentation. Start building your Android app in minutes, not hours.
+**An offline-first Japanese learning application** powered by AI-generated content, designed to work smoothly on mid-range Android devices without requiring constant internet connectivity.
+
+---
+
+## 🎯 Project Overview
+
+JLearn is a comprehensive Japanese language learning application that delivers a rich educational experience entirely offline after initial setup. The app features vocabulary, grammar, listening, reading, and conversation modules, all powered by pre-generated AI content.
+
+### Key Features
+
+- ✅ **100% Offline Learning**: All features work without internet after setup
+- 🎓 **Comprehensive Curriculum**: Vocabulary, grammar, listening, reading, dialogues
+- 🔄 **Spaced Repetition**: SM-2 algorithm for optimal review scheduling
+- 📦 **Content Packs**: Downloadable packs for JLPT, travel, business Japanese
+- 🎮 **Gamification**: XP, levels, achievements, and daily streaks
+- 🎵 **Audio Pronunciation**: Native speaker audio for all vocabulary
+- 📊 **Progress Tracking**: Detailed analytics and weakness identification
+- 📱 **Optimized Performance**: Smooth on 4-8GB RAM Android devices
+
+---
+
+## 📖 Documentation
+
+### Essential Documents
+
+| Document | Purpose |
+|----------|---------|
+| [PROJECT_INITIALIZATION.md](docs/PROJECT_INITIALIZATION.md) | **START HERE** - Setup summary and immediate next steps |
+| [PRODUCT_REQUIREMENTS.md](docs/PRODUCT_REQUIREMENTS.md) | Product vision, features, and requirements |
+| [TECHNICAL_DESIGN.md](docs/TECHNICAL_DESIGN.md) | Architecture, database schema, implementation specs |
+| [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) | 16-week development roadmap with sprints |
+
+### Supporting Guides
+
+| Document | Purpose |
+|----------|---------|
+| [GETTING_STARTED.md](GETTING_STARTED.md) | Development environment setup |
+| [APP_CUSTOMIZATION.md](APP_CUSTOMIZATION.md) | Customization checklist |
+| [BUILD_OPTIMIZATION.md](BUILD_OPTIMIZATION.md) | Build performance optimization |
+| [TESTING.md](TESTING.md) | Testing strategy |
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────┐
+│         Presentation Layer               │
+│  (Flutter Widgets - Material Design 3)  │
+└─────────────────────────────────────────┘
+                    ↕
+┌─────────────────────────────────────────┐
+│       Application Layer                  │
+│  (State Management - Provider)           │
+└─────────────────────────────────────────┘
+                    ↕
+┌─────────────────────────────────────────┐
+│         Domain Layer                     │
+│  (Models, Repositories, Services)        │
+└─────────────────────────────────────────┘
+                    ↕
+┌─────────────────────────────────────────┐
+│          Data Layer                      │
+│  (SQLite, File System, SharedPrefs)      │
+└─────────────────────────────────────────┘
+```
+
+### Technology Stack
+
+- **Framework**: Flutter 3.10.1+
+- **Language**: Dart 3.10.1+
+- **Database**: SQLite (sqflite)
+- **State Management**: Provider
+- **Audio**: audioplayers
+- **DI**: get_it
+- **Network**: dio (content packs only)
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- ✅ Flutter SDK 3.10.1+
+- ✅ Dart 3.10.1+
+- ✅ Java 17+ (for Android)
+- ✅ Android Studio or VS Code
+
+Verify: `flutter doctor -v && java -version`
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/jlearn-app.git
+cd jlearn-app
+
+# Get dependencies
+flutter pub get
+
+# Verify setup
+flutter analyze
+
+# Run the app
+flutter run
+```
+
+### Create Folder Structure (Sprint 1)
+
+```bash
+mkdir -p lib/{models,data/{database,repositories},services,controllers,screens,widgets,utils}
+```
+
+---
+
+## 📊 Development Roadmap
+
+### Phase 1: Foundation (Weeks 1-4)
+- ✅ Database architecture
+- ✅ Repository pattern
+- ✅ UI navigation
+- ✅ Home dashboard
+
+### Phase 2: Core Learning (Weeks 5-9)
+- 📅 Vocabulary flashcards
+- 📅 Spaced repetition system
+- 📅 Grammar module
+- 📅 Quiz system
+
+### Phase 3: Advanced Features (Weeks 10-13)
+- 📅 Content pack system
+- 📅 Listening comprehension
+- 📅 Reading passages
+- 📅 Dialog practice
+
+### Phase 4: Polish & Launch (Weeks 14-16)
+- 📅 Gamification
+- 📅 Testing & optimization
+- 📅 Play Store launch
+
+**Total Duration**: 16-20 weeks
+
+---
+
+## 🗃️ Database Schema
+
+### Core Tables
+
+- **vocabulary** - Japanese words with audio
+- **example_sentences** - Usage examples
+- **grammar_points** - Grammar explanations
+- **listening_content** - Audio exercises
+- **reading_passages** - Japanese texts
+- **dialogues** - Conversation practice
+- **user_progress** - Learning history & spaced repetition
+- **content_packs** - Downloadable content metadata
+
+**Total**: 13+ tables with proper indexing and foreign keys
+
+See [TECHNICAL_DESIGN.md](docs/TECHNICAL_DESIGN.md) for complete schema.
+
+---
+
+## 📦 Content Strategy
+
+### Base Pack (Shipped with App) - 80-100MB
+- 1,000 vocabulary words (JLPT N5-N4)
+- 50 grammar points (JLPT N5)
+- 20 listening exercises
+- 10 reading passages
+
+### Optional Content Packs
+- **JLPT N5 Complete** (150MB)
+- **JLPT N4 Complete** (200MB)
+- **Travel Japanese** (80MB)
+- **Business Japanese** (120MB)
+- **Kanji Master N5-N4** (100MB)
+
+Content is generated at BUILD TIME using LLMs (GPT-4, Claude) and validated by native speakers.
+
+---
+
+## 🤖 AI-Powered Development
+
+This template includes 6 specialized AI agents for VS Code:
+
+| Agent | Purpose | Example Usage |
+|-------|---------|---------------|
+| **@product-owner** | Define features & requirements | `@product-owner Create user stories for vocabulary learning` |
+| **@experience-designer** | Design UX & user flows | `@experience-designer Design the flashcard review flow` |
+| **@architect** | Plan technical architecture | `@architect Design the spaced repetition system` |
+| **@researcher** | Find packages & best practices | `@researcher Best practices for offline audio playback` |
+| **@flutter-developer** | Implement features & fix bugs | `@flutter-developer Implement vocabulary flashcard widget` |
+| **@doc-writer** | Write documentation | `@doc-writer Document the database schema` |
+
+**All agents have terminal access** for running Flutter commands, tests, and builds.
 
 ## ✨ What Makes This Template Special
 
