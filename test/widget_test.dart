@@ -1,30 +1,62 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:jlearn/main.dart';
+import 'package:jlearn/services/spaced_repetition_service.dart';
+import 'package:jlearn/models/review_card.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('Spaced Repetition Service', () {
+    late SpacedRepetitionService srs;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    setUp(() {
+      srs = SpacedRepetitionService();
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('calculates next review for quality 0 (again)', () {
+      final card = ReviewCard(
+        vocabularyId: 1,
+        repetitions: 5,
+        easeFactor: 2.5,
+        intervalDays: 10,
+      );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      final result = srs.calculateNextReview(card, 0);
+
+      expect(result.repetitions, 0);
+      expect(result.intervalDays, 1);
+    });
+
+    test('calculates next review for quality 3 (good)', () {
+      final card = ReviewCard(
+        vocabularyId: 1,
+        repetitions: 0,
+        easeFactor: 2.5,
+        intervalDays: 1,
+      );
+
+      final result = srs.calculateNextReview(card, 3);
+
+      expect(result.repetitions, 1);
+      expect(result.intervalDays, 1);
+    });
+
+    test('calculates next review for quality 4 (easy)', () {
+      final card = ReviewCard(
+        vocabularyId: 1,
+        repetitions: 1,
+        easeFactor: 2.5,
+        intervalDays: 1,
+      );
+
+      final result = srs.calculateNextReview(card, 4);
+
+      expect(result.repetitions, 2);
+      expect(result.intervalDays, 6);
+    });
+
+    test('throws error for invalid quality', () {
+      final card = ReviewCard(vocabularyId: 1);
+
+      expect(() => srs.calculateNextReview(card, 5), throwsArgumentError);
+      expect(() => srs.calculateNextReview(card, -1), throwsArgumentError);
+    });
   });
 }
