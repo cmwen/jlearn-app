@@ -111,7 +111,7 @@ jobs:
       run: |
         VERSION="${{ inputs.version_name }}"
         RELEASE_TYPE="${{ inputs.release_type }}"
-        APP_NAME="min-android-template"
+        APP_NAME="jlearn"
         
         mkdir -p build/artifacts
         cp build/app/outputs/flutter-apk/app-release.apk \
