@@ -20,7 +20,7 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
   final _repository = LearningRepository(AppDatabase.instance);
   final _sm2 = SM2Algorithm();
   final _weakPointDetector = WeakPointDetector();
-  
+
   List<VocabularyItem> _vocabulary = [];
   List<ReviewRecord> _reviews = [];
   List<WeakPoint> _weakPoints = [];
@@ -29,7 +29,7 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
   VocabularyItem? _currentVocab;
   bool _isLoading = true;
   Map<String, int> _stats = {};
-  
+
   @override
   void initState() {
     super.initState();
@@ -38,25 +38,27 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
 
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
-    
+
     _vocabulary = await _repository.getAllVocabulary();
     _reviews = await _repository.getRecentReviews(1000);
     _stats = await _repository.getStatistics();
-    
+
     _weakPoints = _weakPointDetector.detectWeakPoints(_vocabulary, _reviews);
     _insights = _weakPointDetector.generateInsights(_weakPoints);
-    
+
     await _loadNextCard();
-    
+
     setState(() => _isLoading = false);
   }
 
   Future<void> _loadNextCard() async {
     final dueCards = await _repository.getDueCards();
-    
+
     if (dueCards.isNotEmpty) {
       _currentCard = dueCards.first;
-      _currentVocab = await _repository.getVocabularyById(_currentCard!.vocabularyId);
+      _currentVocab = await _repository.getVocabularyById(
+        _currentCard!.vocabularyId,
+      );
     } else if (_vocabulary.isNotEmpty) {
       final randomVocab = _vocabulary[Random().nextInt(_vocabulary.length)];
       _currentCard = await _repository.getOrCreateSRSCard(randomVocab.id);
@@ -66,12 +68,16 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
 
   Future<void> _submitReview(int quality) async {
     if (_currentCard == null || _currentVocab == null) return;
-    
+
     final responseTime = Random().nextInt(3000) + 2000;
-    
-    final updatedCard = _sm2.updateCard(_currentCard!, quality, responseTimeMs: responseTime);
+
+    final updatedCard = _sm2.updateCard(
+      _currentCard!,
+      quality,
+      responseTimeMs: responseTime,
+    );
     await _repository.saveSRSCard(updatedCard);
-    
+
     final record = ReviewRecord(
       id: 0,
       vocabularyId: _currentCard!.vocabularyId,
@@ -83,35 +89,40 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
       nextReviewDate: updatedCard.nextReviewDate,
       responseTimeMs: responseTime,
     );
-    
+
     await _repository.saveReviewRecord(record);
-    
+
     await _loadData();
   }
 
   Future<void> _generateSampleReviews() async {
     final random = Random();
-    
+
     for (final vocab in _vocabulary) {
       final card = await _repository.getOrCreateSRSCard(vocab.id);
-      
+
       final reviewCount = random.nextInt(5) + 3;
-      
+
       var currentCard = card;
       for (var i = 0; i < reviewCount; i++) {
         int quality;
         if (vocab.category == 'verbs' && random.nextDouble() < 0.6) {
           quality = random.nextInt(3);
-        } else if (vocab.category == 'adjectives' && random.nextDouble() < 0.4) {
+        } else if (vocab.category == 'adjectives' &&
+            random.nextDouble() < 0.4) {
           quality = random.nextInt(3);
         } else {
           quality = random.nextInt(3) + 3;
         }
-        
+
         final responseTime = random.nextInt(5000) + 1000;
-        
-        currentCard = _sm2.updateCard(currentCard, quality, responseTimeMs: responseTime);
-        
+
+        currentCard = _sm2.updateCard(
+          currentCard,
+          quality,
+          responseTimeMs: responseTime,
+        );
+
         final record = ReviewRecord(
           id: 0,
           vocabularyId: vocab.id,
@@ -123,13 +134,13 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
           nextReviewDate: currentCard.nextReviewDate,
           responseTimeMs: responseTime,
         );
-        
+
         await _repository.saveReviewRecord(record);
       }
-      
+
       await _repository.saveSRSCard(currentCard);
     }
-    
+
     await _loadData();
   }
 
@@ -214,14 +225,20 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Current Review', style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              'Current Review',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 16),
             Center(
               child: Column(
                 children: [
                   Text(
                     _currentVocab!.word,
-                    style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     _currentVocab!.reading,
@@ -240,7 +257,10 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
             const SizedBox(height: 8),
             _buildSRSInfo(),
             const SizedBox(height: 16),
-            Text('Rate your recall:', style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Rate your recall:',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -268,7 +288,9 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
         Text('Interval: ${_currentCard!.intervalDays} days'),
         Text('Consecutive Correct: ${_currentCard!.consecutiveCorrect}'),
         Text('Consecutive Incorrect: ${_currentCard!.consecutiveIncorrect}'),
-        Text('Average Quality: ${_currentCard!.averageQuality.toStringAsFixed(2)}'),
+        Text(
+          'Average Quality: ${_currentCard!.averageQuality.toStringAsFixed(2)}',
+        ),
         Text('Total Reviews: ${_currentCard!.totalReviews}'),
       ],
     );
@@ -278,7 +300,11 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
     return ElevatedButton(
       onPressed: () => _submitReview(quality),
       style: ElevatedButton.styleFrom(backgroundColor: color),
-      child: Text('$quality\n$label', textAlign: TextAlign.center, style: const TextStyle(fontSize: 11)),
+      child: Text(
+        '$quality\n$label',
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 11),
+      ),
     );
   }
 
@@ -289,16 +315,22 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Weak Points Detected (${_weakPoints.length})', 
-                style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              'Weak Points Detected (${_weakPoints.length})',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 12),
             if (_weakPoints.isEmpty)
               const Text('No weak points detected yet. Great job!')
             else
-              ..._weakPoints.take(5).map((wp) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: _buildWeakPointItem(wp),
-                  )),
+              ..._weakPoints
+                  .take(5)
+                  .map(
+                    (wp) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _buildWeakPointItem(wp),
+                    ),
+                  ),
           ],
         ),
       ),
@@ -321,7 +353,10 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
             children: [
               Text(
                 '${wp.category} (JLPT N${wp.jlptLevel})',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -340,7 +375,9 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
           Text('Error Rate: ${(wp.errorRate * 100).toStringAsFixed(1)}%'),
           Text('Total Attempts: ${wp.totalAttempts}'),
           Text('Failed: ${wp.failedAttempts}'),
-          Text('Avg Response Time: ${(wp.averageResponseTime / 1000).toStringAsFixed(1)}s'),
+          Text(
+            'Avg Response Time: ${(wp.averageResponseTime / 1000).toStringAsFixed(1)}s',
+          ),
           Text('Struggling Words: ${wp.strugglingVocabularyIds.length}'),
         ],
       ),
@@ -364,24 +401,31 @@ class _MLPoCScreenState extends State<MLPoCScreen> {
           children: [
             Text('AI Insights', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 12),
-            Text('Overall Status: ${_insights!['overallStatus']}',
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              'Overall Status: ${_insights!['overallStatus']}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             if ((_insights!['weakCategories'] as List).isNotEmpty) ...[
               const Text('Weak Categories:'),
-              ...(_insights!['weakCategories'] as List).map((cat) => 
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Text('• $cat'),
-                  )),
+              ...(_insights!['weakCategories'] as List).map(
+                (cat) => Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Text('• $cat'),
+                ),
+              ),
               const SizedBox(height: 8),
             ],
-            const Text('Recommendations:', style: TextStyle(fontWeight: FontWeight.bold)),
-            ...(_insights!['recommendations'] as List).map((rec) => 
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 4),
-                  child: Text('• $rec'),
-                )),
+            const Text(
+              'Recommendations:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            ...(_insights!['recommendations'] as List).map(
+              (rec) => Padding(
+                padding: const EdgeInsets.only(left: 16, top: 4),
+                child: Text('• $rec'),
+              ),
+            ),
           ],
         ),
       ),

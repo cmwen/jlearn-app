@@ -10,18 +10,48 @@ void main() {
 
     setUp(() {
       detector = WeakPointDetector();
-      
+
       vocabulary = [
-        VocabularyItem(id: 1, word: '食べる', reading: 'たべる', meaning: 'to eat', 
-                       category: 'verbs', jlptLevel: 5),
-        VocabularyItem(id: 2, word: '飲む', reading: 'のむ', meaning: 'to drink', 
-                       category: 'verbs', jlptLevel: 5),
-        VocabularyItem(id: 3, word: '見る', reading: 'みる', meaning: 'to see', 
-                       category: 'verbs', jlptLevel: 5),
-        VocabularyItem(id: 4, word: '猫', reading: 'ねこ', meaning: 'cat', 
-                       category: 'nouns', jlptLevel: 5),
-        VocabularyItem(id: 5, word: '犬', reading: 'いぬ', meaning: 'dog', 
-                       category: 'nouns', jlptLevel: 5),
+        VocabularyItem(
+          id: 1,
+          word: '食べる',
+          reading: 'たべる',
+          meaning: 'to eat',
+          category: 'verbs',
+          jlptLevel: 5,
+        ),
+        VocabularyItem(
+          id: 2,
+          word: '飲む',
+          reading: 'のむ',
+          meaning: 'to drink',
+          category: 'verbs',
+          jlptLevel: 5,
+        ),
+        VocabularyItem(
+          id: 3,
+          word: '見る',
+          reading: 'みる',
+          meaning: 'to see',
+          category: 'verbs',
+          jlptLevel: 5,
+        ),
+        VocabularyItem(
+          id: 4,
+          word: '猫',
+          reading: 'ねこ',
+          meaning: 'cat',
+          category: 'nouns',
+          jlptLevel: 5,
+        ),
+        VocabularyItem(
+          id: 5,
+          word: '犬',
+          reading: 'いぬ',
+          meaning: 'dog',
+          category: 'nouns',
+          jlptLevel: 5,
+        ),
       ];
     });
 
@@ -50,7 +80,7 @@ void main() {
       ];
 
       final weakPoints = detector.detectWeakPoints(vocabulary, reviews);
-      
+
       expect(weakPoints, isNotEmpty);
       expect(weakPoints.first.category, 'verbs');
       expect(weakPoints.first.errorRate, greaterThan(0.5));
@@ -63,7 +93,7 @@ void main() {
       );
 
       final weakPoints = detector.detectWeakPoints(vocabulary, reviews);
-      
+
       if (weakPoints.isNotEmpty) {
         expect(weakPoints.first.severity, greaterThan(0.0));
         expect(weakPoints.first.severity, lessThanOrEqualTo(1.0));
@@ -81,7 +111,7 @@ void main() {
       ];
 
       final weakPoints = detector.detectWeakPoints(vocabulary, reviews);
-      
+
       if (weakPoints.isNotEmpty) {
         expect(weakPoints.first.strugglingVocabularyIds, isNotEmpty);
         expect(weakPoints.first.strugglingVocabularyIds, contains(1));
@@ -104,7 +134,7 @@ void main() {
       ];
 
       final weakPoints = detector.detectWeakPoints(vocabulary, reviews);
-      
+
       if (weakPoints.length > 1) {
         for (int i = 0; i < weakPoints.length - 1; i++) {
           expect(
@@ -116,10 +146,7 @@ void main() {
     });
 
     test('requires minimum reviews for analysis', () {
-      final reviews = [
-        _createReview(1, 0),
-        _createReview(1, 0),
-      ];
+      final reviews = [_createReview(1, 0), _createReview(1, 0)];
 
       final weakPoints = detector.detectWeakPoints(vocabulary, reviews);
       expect(weakPoints, isEmpty);
@@ -164,15 +191,15 @@ void main() {
     });
 
     test('generateInsights returns needs_attention for severe weaknesses', () {
-      final reviews = List.generate(
-        10,
-        (i) => _createReview(1, 0),
-      );
+      final reviews = List.generate(10, (i) => _createReview(1, 0));
 
       final weakPoints = detector.detectWeakPoints(vocabulary, reviews);
       final insights = detector.generateInsights(weakPoints);
 
-      expect(insights['overallStatus'], anyOf(['needs_attention', 'improving']));
+      expect(
+        insights['overallStatus'],
+        anyOf(['needs_attention', 'improving']),
+      );
       expect(insights['recommendations'], isNotEmpty);
     });
 
@@ -197,10 +224,22 @@ void main() {
 
     test('analyzes by both category and JLPT level', () {
       final mixedVocab = [
-        VocabularyItem(id: 1, word: '食べる', reading: 'たべる', meaning: 'to eat',
-                       category: 'verbs', jlptLevel: 5),
-        VocabularyItem(id: 2, word: '勉強する', reading: 'べんきょうする', meaning: 'to study',
-                       category: 'verbs', jlptLevel: 4),
+        VocabularyItem(
+          id: 1,
+          word: '食べる',
+          reading: 'たべる',
+          meaning: 'to eat',
+          category: 'verbs',
+          jlptLevel: 5,
+        ),
+        VocabularyItem(
+          id: 2,
+          word: '勉強する',
+          reading: 'べんきょうする',
+          meaning: 'to study',
+          category: 'verbs',
+          jlptLevel: 4,
+        ),
       ];
 
       final reviews = [
@@ -213,7 +252,7 @@ void main() {
       ];
 
       final weakPoints = detector.detectWeakPoints(mixedVocab, reviews);
-      
+
       if (weakPoints.isNotEmpty) {
         expect(weakPoints.first.jlptLevel, 5);
       }
@@ -232,8 +271,12 @@ void main() {
         _createReview(2, 2, responseTime: 15000),
       ];
 
-      final weakPointsFast = detector.detectWeakPoints([vocabulary[0]], fastReviews);
-      final weakPointsSlow = detector.detectWeakPoints([vocabulary[1]], slowReviews);
+      final weakPointsFast = detector.detectWeakPoints([
+        vocabulary[0],
+      ], fastReviews);
+      final weakPointsSlow = detector.detectWeakPoints([
+        vocabulary[1],
+      ], slowReviews);
 
       if (weakPointsFast.isNotEmpty && weakPointsSlow.isNotEmpty) {
         expect(
@@ -245,7 +288,11 @@ void main() {
   });
 }
 
-ReviewRecord _createReview(int vocabId, int quality, {int responseTime = 3000}) {
+ReviewRecord _createReview(
+  int vocabId,
+  int quality, {
+  int responseTime = 3000,
+}) {
   return ReviewRecord(
     id: 0,
     vocabularyId: vocabId,

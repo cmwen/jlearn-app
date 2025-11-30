@@ -11,10 +11,7 @@ void main() {
     });
 
     test('initializes with correct default values', () {
-      final card = SRSCard(
-        vocabularyId: 1,
-        nextReviewDate: DateTime.now(),
-      );
+      final card = SRSCard(vocabularyId: 1, nextReviewDate: DateTime.now());
 
       expect(card.repetitionNumber, 0);
       expect(card.easinessFactor, 2.5);
@@ -22,10 +19,7 @@ void main() {
     });
 
     test('updates card correctly for quality 5 (perfect recall)', () {
-      final card = SRSCard(
-        vocabularyId: 1,
-        nextReviewDate: DateTime.now(),
-      );
+      final card = SRSCard(vocabularyId: 1, nextReviewDate: DateTime.now());
 
       final updatedCard = sm2.updateCard(card, 5);
 
@@ -54,10 +48,7 @@ void main() {
     });
 
     test('calculates correct intervals for progressive reviews', () {
-      var card = SRSCard(
-        vocabularyId: 1,
-        nextReviewDate: DateTime.now(),
-      );
+      var card = SRSCard(vocabularyId: 1, nextReviewDate: DateTime.now());
 
       card = sm2.updateCard(card, 4);
       expect(card.intervalDays, 1);
@@ -84,10 +75,7 @@ void main() {
     });
 
     test('tracks consecutive correct answers', () {
-      var card = SRSCard(
-        vocabularyId: 1,
-        nextReviewDate: DateTime.now(),
-      );
+      var card = SRSCard(vocabularyId: 1, nextReviewDate: DateTime.now());
 
       card = sm2.updateCard(card, 4);
       expect(card.consecutiveCorrect, 1);
@@ -112,10 +100,7 @@ void main() {
     });
 
     test('calculates average quality correctly', () {
-      var card = SRSCard(
-        vocabularyId: 1,
-        nextReviewDate: DateTime.now(),
-      );
+      var card = SRSCard(vocabularyId: 1, nextReviewDate: DateTime.now());
 
       card = sm2.updateCard(card, 5);
       card = sm2.updateCard(card, 3);
@@ -152,13 +137,10 @@ void main() {
     });
 
     test('getUpcomingReviewDates generates future dates', () {
-      final card = SRSCard(
-        vocabularyId: 1,
-        nextReviewDate: DateTime.now(),
-      );
+      final card = SRSCard(vocabularyId: 1, nextReviewDate: DateTime.now());
 
       final dates = sm2.getUpcomingReviewDates(card, 5);
-      
+
       expect(dates.length, 5);
       for (int i = 0; i < dates.length - 1; i++) {
         expect(dates[i].isBefore(dates[i + 1]), true);

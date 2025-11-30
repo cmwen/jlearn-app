@@ -17,11 +17,7 @@ class AppDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'jlearn.db');
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
-    );
+    return await openDatabase(path, version: 1, onCreate: _onCreate);
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -86,21 +82,111 @@ class AppDatabase {
 
   Future<void> _seedSampleData(Database db) async {
     final sampleVocabulary = [
-      {'word': '食べる', 'reading': 'たべる', 'meaning': 'to eat', 'category': 'verbs', 'jlpt_level': 5},
-      {'word': '飲む', 'reading': 'のむ', 'meaning': 'to drink', 'category': 'verbs', 'jlpt_level': 5},
-      {'word': '見る', 'reading': 'みる', 'meaning': 'to see', 'category': 'verbs', 'jlpt_level': 5},
-      {'word': '聞く', 'reading': 'きく', 'meaning': 'to hear/listen', 'category': 'verbs', 'jlpt_level': 5},
-      {'word': '話す', 'reading': 'はなす', 'meaning': 'to speak', 'category': 'verbs', 'jlpt_level': 5},
-      {'word': '猫', 'reading': 'ねこ', 'meaning': 'cat', 'category': 'nouns', 'jlpt_level': 5},
-      {'word': '犬', 'reading': 'いぬ', 'meaning': 'dog', 'category': 'nouns', 'jlpt_level': 5},
-      {'word': '本', 'reading': 'ほん', 'meaning': 'book', 'category': 'nouns', 'jlpt_level': 5},
-      {'word': '水', 'reading': 'みず', 'meaning': 'water', 'category': 'nouns', 'jlpt_level': 5},
-      {'word': '学校', 'reading': 'がっこう', 'meaning': 'school', 'category': 'nouns', 'jlpt_level': 5},
-      {'word': '大きい', 'reading': 'おおきい', 'meaning': 'big', 'category': 'adjectives', 'jlpt_level': 5},
-      {'word': '小さい', 'reading': 'ちいさい', 'meaning': 'small', 'category': 'adjectives', 'jlpt_level': 5},
-      {'word': '新しい', 'reading': 'あたらしい', 'meaning': 'new', 'category': 'adjectives', 'jlpt_level': 5},
-      {'word': '古い', 'reading': 'ふるい', 'meaning': 'old', 'category': 'adjectives', 'jlpt_level': 5},
-      {'word': '良い', 'reading': 'よい', 'meaning': 'good', 'category': 'adjectives', 'jlpt_level': 5},
+      {
+        'word': '食べる',
+        'reading': 'たべる',
+        'meaning': 'to eat',
+        'category': 'verbs',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '飲む',
+        'reading': 'のむ',
+        'meaning': 'to drink',
+        'category': 'verbs',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '見る',
+        'reading': 'みる',
+        'meaning': 'to see',
+        'category': 'verbs',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '聞く',
+        'reading': 'きく',
+        'meaning': 'to hear/listen',
+        'category': 'verbs',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '話す',
+        'reading': 'はなす',
+        'meaning': 'to speak',
+        'category': 'verbs',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '猫',
+        'reading': 'ねこ',
+        'meaning': 'cat',
+        'category': 'nouns',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '犬',
+        'reading': 'いぬ',
+        'meaning': 'dog',
+        'category': 'nouns',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '本',
+        'reading': 'ほん',
+        'meaning': 'book',
+        'category': 'nouns',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '水',
+        'reading': 'みず',
+        'meaning': 'water',
+        'category': 'nouns',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '学校',
+        'reading': 'がっこう',
+        'meaning': 'school',
+        'category': 'nouns',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '大きい',
+        'reading': 'おおきい',
+        'meaning': 'big',
+        'category': 'adjectives',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '小さい',
+        'reading': 'ちいさい',
+        'meaning': 'small',
+        'category': 'adjectives',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '新しい',
+        'reading': 'あたらしい',
+        'meaning': 'new',
+        'category': 'adjectives',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '古い',
+        'reading': 'ふるい',
+        'meaning': 'old',
+        'category': 'adjectives',
+        'jlpt_level': 5,
+      },
+      {
+        'word': '良い',
+        'reading': 'よい',
+        'meaning': 'good',
+        'category': 'adjectives',
+        'jlpt_level': 5,
+      },
     ];
 
     for (final vocab in sampleVocabulary) {

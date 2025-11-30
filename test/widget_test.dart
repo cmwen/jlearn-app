@@ -13,7 +13,7 @@ void main() {
   testWidgets('App loads successfully', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
     await tester.pump();
-    
+
     expect(find.byType(MaterialApp), findsOneWidget);
   });
 }
