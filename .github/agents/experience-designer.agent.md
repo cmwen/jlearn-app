@@ -2,13 +2,7 @@
 description: Design user experience, interfaces, and user workflows
 name: experience-designer
 tools:
-  - edit
-  - search
-  - usages
-  - fetch
-  - githubRepo
-  - codebase
-  - terminal
+  ['edit', 'search', 'usages', 'fetch', 'githubRepo']
 handoffs:
   - label: Review Architecture
     agent: architect
