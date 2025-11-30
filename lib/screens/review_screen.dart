@@ -3,6 +3,7 @@ import '../data/database_helper.dart';
 import '../models/review_card.dart';
 import '../models/vocabulary.dart';
 import '../services/spaced_repetition_service.dart';
+import '../services/tts_service.dart';
 
 class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key});
@@ -14,17 +15,24 @@ class ReviewScreen extends StatefulWidget {
 class _ReviewScreenState extends State<ReviewScreen> {
   final DatabaseHelper _db = DatabaseHelper.instance;
   final SpacedRepetitionService _srs = SpacedRepetitionService();
+  final TtsService _tts = TtsService();
 
   List<ReviewCard> _reviewCards = [];
   int _currentIndex = 0;
   bool _showAnswer = false;
   bool _isLoading = true;
   Vocabulary? _currentVocabulary;
+  bool _isSpeaking = false;
 
   @override
   void initState() {
     super.initState();
+    _initializeTts();
     _loadReviewCards();
+  }
+
+  Future<void> _initializeTts() async {
+    await _tts.initialize();
   }
 
   Future<void> _loadReviewCards() async {
@@ -42,6 +50,19 @@ class _ReviewScreenState extends State<ReviewScreen> {
       _currentVocabulary = vocab;
       _isLoading = false;
     });
+  }
+
+  Future<void> _speakJapanese(String text) async {
+    setState(() => _isSpeaking = true);
+    await _tts.speak(text);
+    await Future.delayed(const Duration(milliseconds: 500));
+    setState(() => _isSpeaking = false);
+  }
+
+  @override
+  void dispose() {
+    _tts.stop();
+    super.dispose();
   }
 
   Future<void> _handleRating(int quality) async {
@@ -123,9 +144,31 @@ class _ReviewScreenState extends State<ReviewScreen> {
               ).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 24),
-            Text(
-              _currentVocabulary!.word,
-              style: const TextStyle(fontSize: 56, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    _currentVocabulary!.word,
+                    style: const TextStyle(
+                      fontSize: 56,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    _isSpeaking ? Icons.volume_up : Icons.volume_up_outlined,
+                    size: 32,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  onPressed: _isSpeaking
+                      ? null
+                      : () => _speakJapanese(_currentVocabulary!.word),
+                  tooltip: 'Play audio',
+                ),
+              ],
             ),
             const SizedBox(height: 12),
             Text(
@@ -167,12 +210,33 @@ class _ReviewScreenState extends State<ReviewScreen> {
               Center(
                 child: Column(
                   children: [
-                    Text(
-                      _currentVocabulary!.word,
-                      style: const TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _currentVocabulary!.word,
+                            style: const TextStyle(
+                              fontSize: 48,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            _isSpeaking
+                                ? Icons.volume_up
+                                : Icons.volume_up_outlined,
+                            size: 28,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          onPressed: _isSpeaking
+                              ? null
+                              : () => _speakJapanese(_currentVocabulary!.word),
+                          tooltip: 'Play audio',
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -211,11 +275,31 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 const SizedBox(height: 24),
                 const Divider(),
                 const SizedBox(height: 16),
-                Text(
-                  'Example:',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      'Example:',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: Icon(
+                        _isSpeaking
+                            ? Icons.volume_up
+                            : Icons.volume_up_outlined,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      onPressed: _isSpeaking
+                          ? null
+                          : () => _speakJapanese(
+                              _currentVocabulary!.exampleSentence!,
+                            ),
+                      tooltip: 'Play example',
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 Text(
