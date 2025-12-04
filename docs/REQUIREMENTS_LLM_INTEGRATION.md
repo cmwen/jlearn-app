@@ -474,6 +474,8 @@ This document defines the functional requirements for integrating Large Language
 - Tutorial for copy/paste workflow
 - Generate first sample content
 - Show progress tracking features
+- **Explain local-first, serverless architecture**
+- **Highlight data ownership and privacy benefits**
 
 **Acceptance Criteria**:
 - [ ] Onboarding completable in <5 min
@@ -482,6 +484,8 @@ This document defines the functional requirements for integrating Large Language
 - [ ] Sample content generated successfully
 - [ ] User understands basic workflow
 - [ ] Settings accessible post-onboarding
+- [ ] User informed about data ownership (local-first, no servers)
+- [ ] User understands export capabilities
 
 ### FR-7.2: In-App Tutorials
 **Priority**: P1  
@@ -493,6 +497,7 @@ This document defines the functional requirements for integrating Large Language
 - Component interaction tutorials
 - Progress tracking explanation
 - Settings and customization guide
+- Data export tutorial
 
 **Acceptance Criteria**:
 - [ ] Tutorials accessible from menu

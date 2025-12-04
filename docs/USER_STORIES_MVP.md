@@ -394,18 +394,20 @@
 ### US-7.3: Export Learning Data
 **As a** user  
 **I want to** export my learning data  
-**So that** I can back up or transfer to another device
+**So that** I can back up, own my data, or transfer to another device
 
 **Acceptance Criteria**:
 - [ ] Export option in settings
-- [ ] Exports all content and progress
-- [ ] Export format is JSON or CSV
+- [ ] Exports all content and progress (100% of user data)
+- [ ] Export format is JSON (complete) and CSV (summaries)
 - [ ] File includes timestamp in name
 - [ ] User can choose save location
+- [ ] Export includes metadata and schema version
+- [ ] Clear message: "You own your data - no servers involved"
 - [ ] Import functionality to restore (future)
 
 **Story Points**: 8  
-**Priority**: P2 - Nice to Have
+**Priority**: P1 - Should Have (moved from P2 for data ownership commitment)
 
 ---
 

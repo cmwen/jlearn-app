@@ -19,6 +19,9 @@ JLearn App is architected as a **client-side learning shell** that orchestrates 
 4. **Privacy-Focused**: Minimal permissions, encrypted storage
 5. **Extensible**: Plugin architecture for future content types
 6. **Testable**: Clear separation of concerns, dependency injection
+7. **Serverless**: Zero backend infrastructure, no cloud dependencies
+8. **Data Liberation**: Full export/import in open formats
+9. **P2P-Ready**: Architecture supports future peer-to-peer synchronization
 
 ---
 
@@ -305,7 +308,11 @@ abstract class UserRepository {
   Future<void> updateProfile(UserProfile profile);
   Future<UserSettings> getSettings();
   Future<void> updateSettings(UserSettings settings);
-  Future<void> exportData(String path);
+  
+  // Data ownership & export
+  Future<ExportResult> exportAllData(String path, ExportFormat format);
+  Future<ImportResult> importData(String path);
+  Future<Map<String, dynamic>> getExportMetadata();
 }
 ```
 
@@ -569,6 +576,8 @@ class SecureKeyManager {
 - **Local Processing**: All learning logic client-side
 - **No User Tracking**: No analytics that identify individuals
 - **Data Ownership**: User can export and delete all data
+- **No Servers**: Zero backend infrastructure, no data leaves device
+- **Complete Transparency**: Open export format, user owns 100% of data
 
 ### Permissions
 **Minimum Required**:
@@ -577,6 +586,11 @@ class SecureKeyManager {
 
 **Not Required**:
 - Location, Camera, Microphone, Contacts, etc.
+
+**Future P2P Permissions** (optional, user-enabled):
+- ACCESS_WIFI_STATE (for local network sync)
+- BLUETOOTH (for Bluetooth sync)
+- NEARBY_WIFI_DEVICES (Android 13+ for P2P discovery)
 
 ---
 
@@ -725,20 +739,57 @@ class GeminiClient implements LlmApiClient {...}
 class ClaudeClient implements LlmApiClient {...}
 ```
 
-### Phase 3: Cloud Sync
+### Phase 3: Data Export/Import System
 ```dart
-abstract class SyncService {
-  Future<void> syncUp();
-  Future<void> syncDown();
-  Stream<SyncStatus> watchStatus();
+class ExportService {
+  Future<ExportResult> exportAllData({
+    required String path,
+    required ExportFormat format, // JSON, CSV
+    bool includeMedia = true,
+  });
+  
+  Future<ExportMetadata> getExportMetadata();
+}
+
+class ImportService {
+  Future<ImportResult> importData(String path);
+  Future<bool> validateImport(String path);
+  Future<List<ImportConflict>> detectConflicts(String path);
 }
 ```
 
-### Phase 4: Multi-Platform
+### Phase 4: P2P Synchronization (Serverless)
+```dart
+abstract class P2PSyncService {
+  // Local network discovery
+  Stream<DiscoveredDevice> discoverDevices();
+  
+  // Peer-to-peer sync (no central server)
+  Future<void> syncWithDevice(Device device);
+  
+  // Conflict resolution using CRDTs
+  Future<void> resolveSyncConflicts(List<Conflict> conflicts);
+  
+  // End-to-end encryption
+  Future<void> establishSecureChannel(Device device);
+  
+  Stream<SyncStatus> watchSyncStatus();
+}
+
+// Optional self-hosted sync server (user-controlled)
+abstract class SelfHostedSyncService {
+  Future<void> configureSyncServer(String url, Credentials creds);
+  Future<void> syncWithServer();
+  // User maintains their own server, no central infrastructure
+}
+```
+
+### Phase 5: Multi-Platform
 - iOS app (same codebase)
 - Web app (Flutter web)
 - Desktop apps (Flutter desktop)
 - Shared data layer with platform-specific UI
+- P2P sync across all platforms
 
 ---
 

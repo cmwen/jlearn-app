@@ -190,26 +190,36 @@ This roadmap outlines the phased implementation plan for transforming JLearn App
   - [ ] Create deletion/archival
   - [ ] Build statistics dashboard
 
+- [ ] **Data Export (MVP Required)**
+  - [ ] Implement full data export (JSON format)
+  - [ ] Export all content, progress, and settings
+  - [ ] Add CSV summaries for analytics
+  - [ ] Include export metadata and schema version
+  - [ ] Create export UI in settings
+  - [ ] Test export/restore workflow
+
 - [ ] **MVP Polish**
   - [ ] Refine UI/UX based on testing
   - [ ] Add loading states everywhere
   - [ ] Implement error boundaries
   - [ ] Add haptic feedback
   - [ ] Create app icon and splash screen
-  - [ ] Write help documentation
+  - [ ] Write help documentation (emphasize local-first, data ownership)
   - [ ] Conduct internal QA testing
   - [ ] Fix critical bugs
 
 #### Deliverables
 - 2 fully functional learning components
 - Content library operational
+- **Full data export functionality**
 - MVP ready for beta testing
-- Help documentation complete
+- Help documentation complete (with privacy/ownership messaging)
 
 #### Testing Focus
 - Component interaction smoothness
 - Performance under load (1000+ items)
 - User flow completion rates
+- **Export/import data integrity**
 - Critical bug elimination
 
 ---
@@ -270,7 +280,8 @@ This roadmap outlines the phased implementation plan for transforming JLearn App
   - [ ] Improve progress visualizations
   - [ ] Add goal setting and tracking
   - [ ] Enhance recommendation engine
-  - [ ] Add export/backup functionality
+  - [ ] **Refine export/backup functionality based on beta feedback**
+  - [ ] **Add data import functionality (restore from export)**
 
 - [ ] **Performance Optimization**
   - [ ] Profile app performance
@@ -289,16 +300,16 @@ This roadmap outlines the phased implementation plan for transforming JLearn App
   - [ ] Add dark mode refinements
 
 - [ ] **Launch Preparation**
-  - [ ] Create marketing materials
-  - [ ] Write app store description
+  - [ ] Create marketing materials (emphasize privacy, data ownership, no servers)
+  - [ ] Write app store description (highlight local-first architecture)
   - [ ] Prepare screenshots and video
   - [ ] Create user documentation
   - [ ] Plan launch communications
-  - [ ] Set up community channels
+  - [ ] Set up community channels (decentralized options: Matrix, Discord)
 
 #### Deliverables
 - Production-ready app
-- Marketing materials complete
+- Marketing materials complete (privacy-focused messaging)
 - App store listing ready
 - Community infrastructure live
 
@@ -422,28 +433,37 @@ This roadmap outlines the phased implementation plan for transforming JLearn App
 **Platform Expansion**
 - [ ] iOS version
 - [ ] Web version
-- [ ] Cross-platform sync
-- [ ] Cloud backup
+- [ ] **P2P device synchronization** (no central server)
+- [ ] **Local network sync** (WiFi Direct, Bluetooth)
+- [ ] **Optional self-hosted sync servers** (user-controlled)
 
-**Social & Community**
-- [ ] Share learning achievements
-- [ ] Community prompt library
-- [ ] User-generated content
-- [ ] Learning groups
-- [ ] Leaderboards
+**Social & Community (Decentralized)**
+- [ ] Share learning achievements (via export)
+- [ ] Community prompt library (decentralized)
+- [ ] User-generated content sharing (P2P)
+- [ ] Learning groups (P2P-based)
+- [ ] **Privacy-preserving leaderboards** (opt-in, aggregated only)
 
 **Business Features**
-- [ ] Premium subscription (optional)
-- [ ] White-label licensing
-- [ ] School/institution features
-- [ ] Tutor tools
-- [ ] Analytics for educators
+- [ ] Premium features (optional, no subscriptions)
+- [ ] Open-source core with proprietary extensions
+- [ ] School/institution features (self-hosted)
+- [ ] Tutor tools (local-first)
+- [ ] Analytics for educators (privacy-preserving)
+
+**Data Sovereignty**
+- [ ] **P2P sync protocol implementation**
+- [ ] **Multi-device data reconciliation**
+- [ ] **Conflict resolution for distributed data**
+- [ ] **End-to-end encryption for sync**
+- [ ] **Optional CRDT-based sync** (for consistency)
 
 #### Success Metrics
 - 10,000+ active users
 - 80%+ 30-day retention
 - 4.5+ app store rating
-- Revenue positive (if applicable)
+- **Zero server costs** (local-first maintained)
+- Strong privacy reputation
 
 ---
 
