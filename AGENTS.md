@@ -1,23 +1,19 @@
 # Agent Configuration and Instructions
 
-This document provides guidance for AI agents and automated tools working with this Android Flutter template repository.
+This document provides guidance for AI agents and automated tools working with JLearn - an LLM-powered language learning shell.
 
 ## 🎯 Quick Reference for AI Agents
 
-**First-Time Users**: Direct them to [GETTING_STARTED.md](GETTING_STARTED.md) for complete setup guide.
+**Documentation**: See [docs/README.md](docs/README.md) for product documentation index.
 
-**Customization**: Use [APP_CUSTOMIZATION.md](APP_CUSTOMIZATION.md) for comprehensive customization checklist with AI prompts.
-
-**Important Files to Update When Renaming App**:
-- `pubspec.yaml` (name, description)
-- `lib/main.dart` (imports, title)
-- `test/widget_test.dart` (imports)
-- `android/app/build.gradle.kts` (namespace, applicationId)
-- `android/app/src/main/AndroidManifest.xml` (label)
+**Key Documents**:
+- [PRODUCT_VISION.md](docs/PRODUCT_VISION.md) - Strategic vision and direction
+- [ARCHITECTURE_OVERVIEW.md](docs/ARCHITECTURE_OVERVIEW.md) - Technical architecture
+- [IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md) - Development phases
 
 ## Repository Overview
 
-This is a production-ready Android Flutter template with AI-powered development workflow, optimized build system (Java 17, parallel builds, caching), and comprehensive CI/CD. All agents have access to VS Code tools including terminal, debugger, test runner, and codebase explorer.
+JLearn is an LLM-powered language learning shell with AI-powered development workflow, optimized build system (Java 17, parallel builds, caching), and comprehensive CI/CD. All agents have access to VS Code tools including terminal, debugger, test runner, and codebase explorer.
 
 ## AI Agents Overview
 
@@ -181,11 +177,11 @@ For complete details, see [BUILD_OPTIMIZATION.md](BUILD_OPTIMIZATION.md)
 
 ## Documentation Resources
 
-- `docs/AI_BEGINNER_GUIDE.md` - For complete beginners
-- `docs/AI_INTERMEDIATE_GUIDE.md` - For developers new to Flutter
-- `docs/AI_ADVANCED_GUIDE.md` - For experienced developers
-- `docs/AI_PROMPT_TEMPLATES.md` - Ready-to-use prompts
-- `AI_PROMPTING_GUIDE.md` - Overview of all guides
+- `docs/PRODUCT_VISION.md` - Strategic vision and direction
+- `docs/ARCHITECTURE_OVERVIEW.md` - Technical system design
+- `docs/IMPLEMENTATION_ROADMAP.md` - Development phases and milestones
+- `docs/JSON_SCHEMAS.md` - Content format specifications
+- `docs/USER_STORIES_MVP.md` - User stories with acceptance criteria
 
 ## Common Tasks and Agent Workflows
 
