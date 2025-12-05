@@ -16,7 +16,7 @@ class PromptGeneratorScreen extends StatefulWidget {
 class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
   final PromptGeneratorService _promptService = PromptGeneratorService();
   final TextEditingController _topicController = TextEditingController();
-  
+
   ContentType _selectedType = ContentType.flashcardSet;
   String _selectedLanguage = 'ja';
   String _selectedLevel = 'A1';
@@ -42,9 +42,9 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
   void _generatePrompt() {
     final topic = _topicController.text.trim();
     if (topic.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a topic')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter a topic')));
       return;
     }
 
@@ -78,10 +78,10 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
 
   Future<void> _copyPrompt() async {
     if (_generatedPrompt == null) return;
-    
+
     await Clipboard.setData(ClipboardData(text: _generatedPrompt!));
     setState(() => _promptCopied = true);
-    
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -97,9 +97,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
 
   void _navigateToImport() {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const ContentImportScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const ContentImportScreen()),
     );
   }
 
@@ -185,13 +183,10 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Options',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Options', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _selectedLanguage,
+              initialValue: _selectedLanguage,
               decoration: const InputDecoration(
                 labelText: 'Language',
                 border: OutlineInputBorder(),
@@ -210,7 +205,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _selectedLevel,
+              initialValue: _selectedLevel,
               decoration: const InputDecoration(
                 labelText: 'Level',
                 border: OutlineInputBorder(),
@@ -218,7 +213,9 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
               items: ProficiencyLevel.all.map((level) {
                 return DropdownMenuItem(
                   value: level,
-                  child: Text('$level - ${ProficiencyLevel.description(level)}'),
+                  child: Text(
+                    '$level - ${ProficiencyLevel.description(level)}',
+                  ),
                 );
               }).toList(),
               onChanged: (value) {
@@ -262,10 +259,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Topic',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Topic', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             TextField(
               controller: _topicController,
@@ -279,12 +273,15 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
                     _topicController.text = topic;
                   },
                   itemBuilder: (context) {
-                    return _promptService.getCommonTopics(_selectedLanguage).map((topic) {
-                      return PopupMenuItem(
-                        value: topic,
-                        child: Text(topic),
-                      );
-                    }).toList();
+                    return _promptService
+                        .getCommonTopics(_selectedLanguage)
+                        .map((topic) {
+                          return PopupMenuItem(
+                            value: topic,
+                            child: Text(topic),
+                          );
+                        })
+                        .toList();
                   },
                 ),
               ),
@@ -341,10 +338,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
             child: SingleChildScrollView(
               child: SelectableText(
                 _generatedPrompt!,
-                style: const TextStyle(
-                  fontFamily: 'monospace',
-                  fontSize: 12,
-                ),
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
               ),
             ),
           ),

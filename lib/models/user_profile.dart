@@ -14,8 +14,8 @@ class UserProfile {
     this.goals = const [],
     DateTime? createdAt,
     DateTime? lastActiveAt,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        lastActiveAt = lastActiveAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       lastActiveAt = lastActiveAt ?? DateTime.now();
 
   factory UserProfile.empty() {
     return UserProfile(id: 'default');
@@ -29,11 +29,14 @@ class UserProfile {
           .where((s) => s.isNotEmpty)
           .toList(),
       proficiencyLevel: map['proficiency_level'] as String,
-      goals:
-          (map['goals'] as String).split(',').where((s) => s.isNotEmpty).toList(),
+      goals: (map['goals'] as String)
+          .split(',')
+          .where((s) => s.isNotEmpty)
+          .toList(),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at'] as int),
-      lastActiveAt:
-          DateTime.fromMillisecondsSinceEpoch(map['last_active'] as int),
+      lastActiveAt: DateTime.fromMillisecondsSinceEpoch(
+        map['last_active'] as int,
+      ),
     );
   }
 

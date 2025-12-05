@@ -16,7 +16,7 @@ class ContentLibraryScreen extends StatefulWidget {
 
 class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
   final DatabaseHelper _db = DatabaseHelper.instance;
-  
+
   List<Content> _content = [];
   bool _isLoading = true;
   String? _filterType;
@@ -30,7 +30,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
 
   Future<void> _loadContent() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final content = await _db.getAllContent(
         type: _filterType,
@@ -43,9 +43,9 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading content: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading content: $e')));
       }
     }
   }
@@ -59,9 +59,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
       );
     } else if (content is Quiz) {
       Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => QuizStudyScreen(quiz: content),
-        ),
+        MaterialPageRoute(builder: (context) => QuizStudyScreen(quiz: content)),
       );
     }
   }
@@ -114,18 +112,12 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
               _loadContent();
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: null,
-                child: Text('All Types'),
-              ),
+              const PopupMenuItem(value: null, child: Text('All Types')),
               const PopupMenuItem(
                 value: 'flashcard_set',
                 child: Text('Flashcards'),
               ),
-              const PopupMenuItem(
-                value: 'quiz',
-                child: Text('Quizzes'),
-              ),
+              const PopupMenuItem(value: 'quiz', child: Text('Quizzes')),
             ],
           ),
         ],
@@ -133,17 +125,17 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _content.isEmpty
-              ? _buildEmptyState()
-              : RefreshIndicator(
-                  onRefresh: _loadContent,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _content.length,
-                    itemBuilder: (context, index) {
-                      return _buildContentCard(_content[index]);
-                    },
-                  ),
-                ),
+          ? _buildEmptyState()
+          : RefreshIndicator(
+              onRefresh: _loadContent,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: _content.length,
+                itemBuilder: (context, index) {
+                  return _buildContentCard(_content[index]);
+                },
+              ),
+            ),
     );
   }
 
@@ -160,9 +152,9 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
           const SizedBox(height: 16),
           Text(
             'No content yet',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Colors.grey.shade600,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(color: Colors.grey.shade600),
           ),
           const SizedBox(height: 8),
           Text(
@@ -197,8 +189,8 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: isFlashcard
-                          ? Colors.blue.withOpacity(0.1)
-                          : Colors.purple.withOpacity(0.1),
+                          ? Colors.blue.withValues(alpha: 0.1)
+                          : Colors.purple.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -291,9 +283,9 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
               const SizedBox(height: 8),
               Text(
                 _formatDate(content.createdAt),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.grey),
               ),
             ],
           ),
@@ -311,10 +303,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
       ),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.grey.shade700,
-        ),
+        style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
       ),
     );
   }
@@ -322,7 +311,7 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final diff = now.difference(date);
-    
+
     if (diff.inDays == 0) {
       return 'Today';
     } else if (diff.inDays == 1) {

@@ -11,12 +11,15 @@ class ParseResult {
   final List<String> suggestions;
 
   ParseResult.success(this.content)
-      : errorMessage = null,
-        errorLine = null,
-        suggestions = [];
+    : errorMessage = null,
+      errorLine = null,
+      suggestions = [];
 
-  ParseResult.error(this.errorMessage, {this.errorLine, this.suggestions = const []})
-      : content = null;
+  ParseResult.error(
+    this.errorMessage, {
+    this.errorLine,
+    this.suggestions = const [],
+  }) : content = null;
 
   bool get isSuccess => content != null;
   bool get isError => content == null;
@@ -28,7 +31,7 @@ class JsonParserService {
   ParseResult parse(String input) {
     // First, try to extract JSON from markdown code blocks
     final cleanedJson = _extractJson(input);
-    
+
     if (cleanedJson.isEmpty) {
       return ParseResult.error(
         'No JSON content found',
@@ -81,9 +84,7 @@ class JsonParserService {
         default:
           return ParseResult.error(
             'Unknown content type: $type',
-            suggestions: [
-              'Supported types: flashcard_set, quiz',
-            ],
+            suggestions: ['Supported types: flashcard_set, quiz'],
           );
       }
     } catch (e) {
@@ -157,13 +158,15 @@ class JsonParserService {
       if (q is! Map<String, dynamic>) {
         return ParseResult.error('Question at index $i is not a valid object');
       }
-      
+
       final requiredFields = ['question', 'options', 'correct_answer'];
       for (final field in requiredFields) {
         if (!q.containsKey(field)) {
           return ParseResult.error(
             'Question at index $i missing "$field" field',
-            suggestions: ['Each question must have: ${requiredFields.join(", ")}'],
+            suggestions: [
+              'Each question must have: ${requiredFields.join(", ")}',
+            ],
           );
         }
       }
@@ -179,7 +182,9 @@ class JsonParserService {
       if (correctAnswer != null && !options.contains(correctAnswer)) {
         return ParseResult.error(
           'Question at index $i: correct_answer not in options',
-          suggestions: ['Make sure correct_answer matches one of the options exactly'],
+          suggestions: [
+            'Make sure correct_answer matches one of the options exactly',
+          ],
         );
       }
     }

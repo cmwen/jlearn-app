@@ -24,8 +24,8 @@ abstract class Content {
     DateTime? updatedAt,
     this.isFavorite = false,
     this.isArchived = false,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   Map<String, dynamic> toJson();
 
@@ -63,9 +63,8 @@ class ContentMetadata {
   factory ContentMetadata.fromJson(Map<String, dynamic> json) {
     return ContentMetadata(
       topic: json['topic'] as String?,
-      tags: (json['tags'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
+      tags:
+          (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
           [],
       description: json['description'] as String?,
       timeLimit: json['time_limit'] as int?,

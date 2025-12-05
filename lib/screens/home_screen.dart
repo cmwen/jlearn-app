@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildStatsCard() {
     final flashcardCount = _contentCounts['flashcard_set'] ?? 0;
     final quizCount = _contentCounts['quiz'] ?? 0;
-    
+
     return Card(
       elevation: 4,
       child: Padding(

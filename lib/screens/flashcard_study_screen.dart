@@ -15,7 +15,7 @@ class FlashcardStudyScreen extends StatefulWidget {
 class _FlashcardStudyScreenState extends State<FlashcardStudyScreen>
     with SingleTickerProviderStateMixin {
   final TtsService _tts = TtsService();
-  
+
   int _currentIndex = 0;
   bool _showBack = false;
   int _knownCount = 0;
@@ -100,7 +100,7 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen>
   void _showCompletionDialog() {
     final total = widget.flashcardSet.cards.length;
     final accuracy = total > 0 ? (_knownCount / total * 100).round() : 0;
-    
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -193,7 +193,7 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen>
             value: (_currentIndex + 1) / widget.flashcardSet.cards.length,
             backgroundColor: Colors.grey.shade200,
           ),
-          
+
           // Flashcard
           Expanded(
             child: GestureDetector(
@@ -212,7 +212,7 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen>
                   builder: (context, child) {
                     final angle = _flipAnimation.value * 3.14159;
                     final showFront = angle < 1.5708; // π/2
-                    
+
                     return Transform(
                       alignment: Alignment.center,
                       transform: Matrix4.identity()
@@ -231,7 +231,7 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen>
               ),
             ),
           ),
-          
+
           // Action buttons
           Padding(
             padding: const EdgeInsets.all(24),
@@ -282,9 +282,9 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen>
               const SizedBox(height: 16),
               Text(
                 _currentCard.pronunciation!,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.grey,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(color: Colors.grey),
               ),
             ],
             const SizedBox(height: 24),
@@ -296,9 +296,9 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen>
             const Spacer(),
             Text(
               'Tap to flip',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey),
             ),
           ],
         ),
@@ -326,10 +326,7 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen>
                 const SizedBox(height: 24),
                 const Divider(),
                 const SizedBox(height: 16),
-                Text(
-                  'Example:',
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
+                Text('Example:', style: Theme.of(context).textTheme.labelLarge),
                 const SizedBox(height: 8),
                 Text(
                   _currentCard.example!,
@@ -353,7 +350,7 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(

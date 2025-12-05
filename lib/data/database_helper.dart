@@ -24,7 +24,12 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 2, onCreate: _createDB, onUpgrade: _upgradeDB);
+    return await openDatabase(
+      path,
+      version: 2,
+      onCreate: _createDB,
+      onUpgrade: _upgradeDB,
+    );
   }
 
   Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
@@ -76,9 +81,15 @@ class DatabaseHelper {
       )
     ''');
 
-    await db.execute('CREATE INDEX IF NOT EXISTS idx_content_type ON content(type)');
-    await db.execute('CREATE INDEX IF NOT EXISTS idx_content_language ON content(language)');
-    await db.execute('CREATE INDEX IF NOT EXISTS idx_content_created ON content(created_at DESC)');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_content_type ON content(type)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_content_language ON content(language)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_content_created ON content(created_at DESC)',
+    );
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -293,10 +304,7 @@ class DatabaseHelper {
     final db = await database;
     await db.update(
       'content',
-      {
-        'is_archived': 1,
-        'updated_at': DateTime.now().millisecondsSinceEpoch,
-      },
+      {'is_archived': 1, 'updated_at': DateTime.now().millisecondsSinceEpoch},
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -308,7 +316,7 @@ class DatabaseHelper {
     final result = await db.rawQuery(
       'SELECT type, COUNT(*) as count FROM content WHERE is_archived = 0 GROUP BY type',
     );
-    
+
     final counts = <String, int>{};
     for (final row in result) {
       counts[row['type'] as String] = row['count'] as int;
@@ -319,7 +327,8 @@ class DatabaseHelper {
   /// Convert database map to Content object
   Content? _mapToContent(Map<String, dynamic> map) {
     final type = map['type'] as String;
-    final jsonData = jsonDecode(map['json_data'] as String) as Map<String, dynamic>;
+    final jsonData =
+        jsonDecode(map['json_data'] as String) as Map<String, dynamic>;
 
     switch (type) {
       case 'flashcard_set':
@@ -337,13 +346,13 @@ class DatabaseHelper {
   Future<UserProfile> getUserProfile() async {
     final db = await database;
     final maps = await db.query('user_profile', limit: 1);
-    
+
     if (maps.isEmpty) {
       final profile = UserProfile.empty();
       await db.insert('user_profile', profile.toMap());
       return profile;
     }
-    
+
     return UserProfile.fromMap(maps.first);
   }
 
@@ -361,10 +370,8 @@ class DatabaseHelper {
   /// Update last active timestamp
   Future<void> updateLastActive() async {
     final db = await database;
-    await db.rawUpdate(
-      'UPDATE user_profile SET last_active = ?',
-      [DateTime.now().millisecondsSinceEpoch],
-    );
+    await db.rawUpdate('UPDATE user_profile SET last_active = ?', [
+      DateTime.now().millisecondsSinceEpoch,
+    ]);
   }
 }
-

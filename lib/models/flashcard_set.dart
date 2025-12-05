@@ -67,7 +67,8 @@ class FlashcardSet extends Content {
   }) : super(type: ContentType.flashcardSet.value);
 
   factory FlashcardSet.fromJson(Map<String, dynamic> json, {String? id}) {
-    final cards = (json['cards'] as List<dynamic>?)
+    final cards =
+        (json['cards'] as List<dynamic>?)
             ?.map((c) => Flashcard.fromJson(c as Map<String, dynamic>))
             .toList() ??
         [];

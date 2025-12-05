@@ -24,18 +24,20 @@ class _QuizStudyScreenState extends State<QuizStudyScreen> {
 
   void _selectAnswer(String answer) {
     if (_hasAnswered) return;
-    
+
     setState(() {
       _selectedAnswer = answer;
       _hasAnswered = true;
       if (_isCorrect) {
         _correctCount++;
       }
-      _results.add(QuizResult(
-        questionId: _currentQuestion.id,
-        selectedAnswer: answer,
-        isCorrect: _isCorrect,
-      ));
+      _results.add(
+        QuizResult(
+          questionId: _currentQuestion.id,
+          selectedAnswer: answer,
+          isCorrect: _isCorrect,
+        ),
+      );
     });
   }
 
@@ -54,7 +56,7 @@ class _QuizStudyScreenState extends State<QuizStudyScreen> {
   void _showResultsDialog() {
     final total = widget.quiz.questions.length;
     final accuracy = total > 0 ? (_correctCount / total * 100).round() : 0;
-    
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -152,7 +154,8 @@ class _QuizStudyScreenState extends State<QuizStudyScreen> {
   String _getResultMessage(int accuracy) {
     if (accuracy >= 90) return 'Outstanding! You\'ve mastered this topic!';
     if (accuracy >= 80) return 'Great work! Just a few more to perfect!';
-    if (accuracy >= 60) return 'Good progress! Review the explanations to improve.';
+    if (accuracy >= 60)
+      return 'Good progress! Review the explanations to improve.';
     if (accuracy >= 40) return 'You\'re on the right track! Keep studying.';
     return 'This is a tough topic. Review and try again!';
   }
@@ -170,10 +173,8 @@ class _QuizStudyScreenState extends State<QuizStudyScreen> {
   void _showReviewMode() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => QuizReviewScreen(
-          quiz: widget.quiz,
-          results: _results,
-        ),
+        builder: (context) =>
+            QuizReviewScreen(quiz: widget.quiz, results: _results),
       ),
     );
   }
@@ -203,7 +204,7 @@ class _QuizStudyScreenState extends State<QuizStudyScreen> {
             value: (_currentIndex + 1) / widget.quiz.questions.length,
             backgroundColor: Colors.grey.shade200,
           ),
-          
+
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -233,23 +234,23 @@ class _QuizStudyScreenState extends State<QuizStudyScreen> {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Options
                   ..._currentQuestion.options.asMap().entries.map((entry) {
                     final index = entry.key;
                     final option = entry.value;
                     return _buildOptionButton(option, index);
                   }),
-                  
+
                   // Explanation (shown after answering)
                   if (_hasAnswered && _currentQuestion.explanation != null) ...[
                     const SizedBox(height: 24),
                     Card(
                       color: _isCorrect
-                          ? Colors.green.withOpacity(0.1)
-                          : Colors.orange.withOpacity(0.1),
+                          ? Colors.green.withValues(alpha: 0.1)
+                          : Colors.orange.withValues(alpha: 0.1),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
@@ -259,14 +260,18 @@ class _QuizStudyScreenState extends State<QuizStudyScreen> {
                               children: [
                                 Icon(
                                   Icons.lightbulb,
-                                  color: _isCorrect ? Colors.green : Colors.orange,
+                                  color: _isCorrect
+                                      ? Colors.green
+                                      : Colors.orange,
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Explanation',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: _isCorrect ? Colors.green : Colors.orange,
+                                    color: _isCorrect
+                                        ? Colors.green
+                                        : Colors.orange,
                                   ),
                                 ),
                               ],
@@ -282,7 +287,7 @@ class _QuizStudyScreenState extends State<QuizStudyScreen> {
               ),
             ),
           ),
-          
+
           // Next button
           if (_hasAnswered)
             Padding(
@@ -304,19 +309,19 @@ class _QuizStudyScreenState extends State<QuizStudyScreen> {
   Widget _buildOptionButton(String option, int index) {
     final letters = ['A', 'B', 'C', 'D'];
     final letter = index < letters.length ? letters[index] : '${index + 1}';
-    
+
     final isSelected = _selectedAnswer == option;
     final isCorrectOption = option == _currentQuestion.correctAnswer;
-    
+
     Color? backgroundColor;
     Color? borderColor;
-    
+
     if (_hasAnswered) {
       if (isCorrectOption) {
-        backgroundColor = Colors.green.withOpacity(0.2);
+        backgroundColor = Colors.green.withValues(alpha: 0.2);
         borderColor = Colors.green;
       } else if (isSelected && !isCorrectOption) {
-        backgroundColor = Colors.red.withOpacity(0.2);
+        backgroundColor = Colors.red.withValues(alpha: 0.2);
         borderColor = Colors.red;
       }
     } else if (isSelected) {
@@ -468,7 +473,8 @@ class QuizReviewScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 12),
-                  if (!result.isCorrect && result.selectedAnswer.isNotEmpty) ...[
+                  if (!result.isCorrect &&
+                      result.selectedAnswer.isNotEmpty) ...[
                     Text(
                       'Your answer: ${result.selectedAnswer}',
                       style: const TextStyle(color: Colors.red),
@@ -487,7 +493,7 @@ class QuizReviewScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.1),
+                        color: Colors.grey.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(question.explanation!),

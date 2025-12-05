@@ -20,7 +20,7 @@ class _ContentImportScreenState extends State<ContentImportScreen> {
   final TextEditingController _jsonController = TextEditingController();
   final JsonParserService _parser = JsonParserService();
   final DatabaseHelper _db = DatabaseHelper.instance;
-  
+
   ParseResult? _parseResult;
   bool _isParsing = false;
   bool _isSaving = false;
@@ -152,7 +152,9 @@ class _ContentImportScreenState extends State<ContentImportScreen> {
                               ? const SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : const Icon(Icons.check_circle_outline),
                           label: const Text('Validate JSON'),
@@ -161,20 +163,27 @@ class _ContentImportScreenState extends State<ContentImportScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: _parseResult?.isSuccess == true && !_isSaving
+                          onPressed:
+                              _parseResult?.isSuccess == true && !_isSaving
                               ? _saveContent
                               : null,
                           icon: _isSaving
                               ? const SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : const Icon(Icons.save),
                           label: const Text('Save Content'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.onPrimary,
                           ),
                         ),
                       ),
@@ -192,13 +201,13 @@ class _ContentImportScreenState extends State<ContentImportScreen> {
 
   Widget _buildResultPanel() {
     final isSuccess = _parseResult!.isSuccess;
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isSuccess
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.red.withValues(alpha: 0.1),
         border: Border(
           top: BorderSide(
             color: isSuccess ? Colors.green : Colors.red,
@@ -224,7 +233,9 @@ class _ContentImportScreenState extends State<ContentImportScreen> {
                       : 'Parsing Error',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: isSuccess ? Colors.green.shade700 : Colors.red.shade700,
+                    color: isSuccess
+                        ? Colors.green.shade700
+                        : Colors.red.shade700,
                   ),
                 ),
               ),

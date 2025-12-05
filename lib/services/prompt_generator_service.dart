@@ -10,7 +10,7 @@ class PromptGeneratorService {
     required int cardCount,
   }) {
     final languageName = _languageCodeToName(language);
-    
+
     return '''Generate a flashcard set for learning $languageName at $level level.
 Topic: $topic
 Number of cards: $cardCount
@@ -55,7 +55,7 @@ Important:
     required int questionCount,
   }) {
     final languageName = _languageCodeToName(language);
-    
+
     return '''Generate a multiple-choice quiz for $languageName at $level level.
 Topic: $topic
 Number of questions: $questionCount
