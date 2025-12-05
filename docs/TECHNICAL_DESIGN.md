@@ -3,7 +3,29 @@
 
 **Version:** 1.0  
 **Date:** 2025-11-29  
-**Status:** Initial Design
+**Status:** ⚠️ PARTIALLY SUPERSEDED - See ARCHITECTURE_OVERVIEW.md
+
+---
+
+> ⚠️ **IMPORTANT: This document is partially outdated**
+> 
+> This technical design document was created for the original **offline-first app with pre-packaged content packs**. The product has pivoted to an **LLM-powered learning shell** architecture.
+> 
+> **What's outdated:**
+> - Content Pack system (Section 2-3 database tables)
+> - Build-time LLM content generation pipeline
+> - Content download/sync flows
+> 
+> **What's still relevant:**
+> - Technology stack (Flutter, SQLite, Provider)
+> - Audio playback architecture
+> - Spaced Repetition algorithm concepts
+> - Performance optimization patterns
+> 
+> **Please refer to:**
+> - [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md) - Current LLM shell architecture
+> - [REQUIREMENTS_LLM_INTEGRATION.md](./REQUIREMENTS_LLM_INTEGRATION.md) - LLM integration specs
+> - [ARCHITECTURE_REVIEW_UX_ALIGNMENT.md](./ARCHITECTURE_REVIEW_UX_ALIGNMENT.md) - Architecture review
 
 ---
 

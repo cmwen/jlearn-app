@@ -2,7 +2,21 @@
 
 **Version:** 1.0  
 **Date:** 2025-11-30  
+**Status:** ⚠️ SUPERSEDED - See USER_FLOWS_LLM_SHELL.md  
 **Related:** UX_DESIGN_JLEARN.md
+
+---
+
+> ⚠️ **IMPORTANT: This document has been superseded**
+> 
+> This user flows document was created for the original offline-first app model with pre-packaged content packs. The product has pivoted to an **LLM-powered learning shell** architecture.
+> 
+> **Please refer to:** 
+> - [USER_FLOWS_LLM_SHELL.md](./USER_FLOWS_LLM_SHELL.md) - Updated user flows for LLM integration
+> - [UX_DESIGN_LLM_SHELL.md](./UX_DESIGN_LLM_SHELL.md) - Updated UX design
+> - [PRODUCT_VISION.md](./PRODUCT_VISION.md) - Product vision explaining the pivot
+> 
+> This document is retained for historical reference and may contain useful flow patterns for future features.
 
 ---
 

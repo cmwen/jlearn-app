@@ -2,8 +2,21 @@
 
 **Version:** 1.0  
 **Date:** 2025-11-30  
-**Status:** Initial Design  
+**Status:** ⚠️ SUPERSEDED - See UX_DESIGN_LLM_SHELL.md  
 **Platforms:** Android (Flutter) | PWA (Web)
+
+---
+
+> ⚠️ **IMPORTANT: This document has been superseded**
+> 
+> This UX design document was created for the original offline-first app model with pre-packaged content packs. The product has pivoted to an **LLM-powered learning shell** architecture.
+> 
+> **Please refer to:** 
+> - [UX_DESIGN_LLM_SHELL.md](./UX_DESIGN_LLM_SHELL.md) - Updated UX design for LLM integration
+> - [USER_FLOWS_LLM_SHELL.md](./USER_FLOWS_LLM_SHELL.md) - Updated user flows
+> - [PRODUCT_VISION.md](./PRODUCT_VISION.md) - Product vision explaining the pivot
+> 
+> This document is retained for historical reference and may contain useful design patterns for future features.
 
 ---
 

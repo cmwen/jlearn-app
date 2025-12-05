@@ -264,6 +264,187 @@ class RecommendationEngine {
 - Consider user goals
 - Adapt to learning velocity
 
+#### Clipboard Service
+```dart
+/// Manages clipboard operations for copy-paste LLM workflow
+class ClipboardService {
+  /// Copy generated prompt to system clipboard
+  Future<void> copyText(String text);
+  
+  /// Read pasted JSON from clipboard
+  Future<String?> pasteText();
+  
+  /// Show visual feedback after copy operation
+  void showCopyFeedback(BuildContext context, String message);
+  
+  /// Check if clipboard has text content
+  Future<bool> hasClipboardContent();
+}
+```
+
+**Features**:
+- System clipboard integration
+- Haptic feedback on copy
+- Visual confirmation (snackbar/toast)
+- Error handling for clipboard access
+
+#### Onboarding Service
+```dart
+/// Manages first-time user experience and tutorial state
+class OnboardingService {
+  /// Check if onboarding has been completed
+  bool get isComplete;
+  
+  /// Current step in onboarding flow (0-based)
+  int get currentStep;
+  
+  /// Total number of onboarding steps
+  int get totalSteps;
+  
+  /// Get the user profile being built during onboarding
+  Future<UserProfile> getInitialProfile();
+  
+  /// Update profile during onboarding
+  Future<void> updateProfile(UserProfile profile);
+  
+  /// Mark a step as completed
+  Future<void> completeStep(int step);
+  
+  /// Skip remaining onboarding
+  Future<void> skip();
+  
+  /// Reset onboarding (for testing or re-onboarding)
+  Future<void> reset();
+  
+  /// Check if specific tutorial has been shown
+  bool isTutorialShown(String tutorialId);
+  
+  /// Mark tutorial as shown
+  Future<void> markTutorialShown(String tutorialId);
+}
+```
+
+**Features**:
+- Persisted onboarding state
+- Step-by-step progress tracking
+- Tutorial replay support
+- Profile building during onboarding
+
+#### Share/Export Service
+```dart
+/// Handles data export and platform sharing
+class ShareExportService {
+  /// Export all user data to a file
+  Future<ExportResult> exportAllData({
+    required ExportFormat format,  // json, csv
+    bool includeContent = true,
+    bool includeProgress = true,
+    bool includeSettings = true,
+  });
+  
+  /// Export specific content items
+  Future<ExportResult> exportContent({
+    required List<String> contentIds,
+    required ExportFormat format,
+  });
+  
+  /// Get metadata about what will be exported
+  Future<ExportMetadata> getExportMetadata();
+  
+  /// Share a file using platform share sheet
+  Future<void> shareFile({
+    required String filePath,
+    required String mimeType,
+    String? subject,
+    String? text,
+  });
+  
+  /// Get appropriate export directory path
+  Future<String> getExportPath(String filename);
+  
+  /// Import data from exported file (future)
+  Future<ImportResult> importData(String filePath);
+  
+  /// Validate import file before importing
+  Future<ValidationResult> validateImportFile(String filePath);
+}
+
+class ExportResult {
+  final bool success;
+  final String? filePath;
+  final int itemsExported;
+  final int fileSizeBytes;
+  final String? errorMessage;
+}
+
+class ExportMetadata {
+  final int contentCount;
+  final int activityCount;
+  final int estimatedSizeBytes;
+  final DateTime exportDate;
+  final String schemaVersion;
+}
+```
+
+**Features**:
+- Multiple export formats (JSON, CSV)
+- Selective export (content, progress, settings)
+- Platform share sheet integration
+- Schema versioning for future compatibility
+- Import validation
+
+#### Navigation Service
+```dart
+/// Centralized navigation for consistent UX flows
+class NavigationService {
+  /// Navigate to specific content for viewing
+  Future<void> navigateToContent(Content content);
+  
+  /// Start a study session for content
+  Future<void> navigateToStudySession(Content content);
+  
+  /// Open the JSON import screen
+  Future<void> navigateToImport({String? prefilledJson});
+  
+  /// Open content generator for specific type
+  Future<void> navigateToGenerator(ContentType type);
+  
+  /// Show progress/analytics screen
+  Future<void> navigateToProgress();
+  
+  /// Show settings screen
+  Future<void> navigateToSettings();
+  
+  /// Show a snackbar message
+  void showSnackBar(String message, {
+    SnackBarAction? action,
+    Duration duration = const Duration(seconds: 3),
+  });
+  
+  /// Show confirmation dialog
+  Future<bool?> showConfirmDialog({
+    required String title,
+    required String message,
+    String confirmText = 'Confirm',
+    String cancelText = 'Cancel',
+    bool isDestructive = false,
+  });
+  
+  /// Show error dialog with optional retry
+  Future<bool?> showErrorDialog({
+    required String title,
+    required String message,
+    String? retryText,
+  });
+}
+```
+
+**Features**:
+- Type-safe navigation
+- Consistent snackbar/dialog patterns
+- Deep linking support (future)
+- Analytics integration (local)
+
 ---
 
 ### 3. Data Layer
@@ -548,6 +729,167 @@ class LearningSessionProvider extends ChangeNotifier {
   void nextItem();
   bool get isComplete;
   SessionSummary get summary;
+}
+```
+
+### Additional Providers for LLM Workflow
+
+```dart
+/// Manages prompt generation flow state
+class PromptProvider extends ChangeNotifier {
+  ContentType _selectedType = ContentType.flashcard;
+  Map<String, dynamic> _options = {};
+  String? _generatedPrompt;
+  bool _isCopied = false;
+  PromptStatus _status = PromptStatus.idle;
+  
+  ContentType get selectedType => _selectedType;
+  String? get generatedPrompt => _generatedPrompt;
+  bool get isCopied => _isCopied;
+  PromptStatus get status => _status;
+  
+  /// Configure prompt generation options
+  void configure({
+    required ContentType type,
+    required String topic,
+    required String level,
+    required int itemCount,
+    Map<String, dynamic>? additionalOptions,
+  });
+  
+  /// Generate prompt based on current configuration
+  Future<void> generatePrompt();
+  
+  /// Mark prompt as copied to clipboard
+  void markCopied();
+  
+  /// Reset for new generation
+  void reset();
+}
+
+enum PromptStatus { idle, generating, ready, copied }
+
+/// Manages JSON import/parse flow state
+class ImportProvider extends ChangeNotifier {
+  String? _rawJson;
+  ParseResult? _parseResult;
+  ValidationResult? _validationResult;
+  Content? _parsedContent;
+  ImportStatus _status = ImportStatus.idle;
+  List<String> _errorSuggestions = [];
+  
+  String? get rawJson => _rawJson;
+  Content? get parsedContent => _parsedContent;
+  ImportStatus get status => _status;
+  List<String> get errorSuggestions => _errorSuggestions;
+  bool get hasErrors => _parseResult?.isError ?? false;
+  String? get errorMessage => _parseResult?.errorMessage;
+  int? get errorLine => _parseResult?.errorLine;
+  
+  /// Set JSON text from clipboard or text input
+  void setJson(String json);
+  
+  /// Parse the JSON and validate
+  Future<void> parseAndValidate();
+  
+  /// Edit JSON and re-parse
+  void editJson(String newJson);
+  
+  /// Save validated content to database
+  Future<void> saveContent();
+  
+  /// Reset for new import
+  void reset();
+}
+
+enum ImportStatus { idle, parsing, validating, valid, invalid, saving, saved }
+
+/// Manages onboarding flow state
+class OnboardingProvider extends ChangeNotifier {
+  int _currentStep = 0;
+  final int _totalSteps = 6;
+  UserProfile _profile = UserProfile.empty();
+  bool _isComplete = false;
+  
+  int get currentStep => _currentStep;
+  int get totalSteps => _totalSteps;
+  UserProfile get profile => _profile;
+  bool get isComplete => _isComplete;
+  double get progress => _currentStep / _totalSteps;
+  
+  /// Move to next onboarding step
+  void nextStep();
+  
+  /// Go back to previous step
+  void previousStep();
+  
+  /// Update profile data during onboarding
+  void updateLanguage(String language);
+  void updateLevel(String level);
+  void updateGoals(List<String> goals);
+  
+  /// Complete onboarding and save profile
+  Future<void> complete();
+  
+  /// Skip remaining onboarding
+  Future<void> skip();
+  
+  /// Reset onboarding (for testing)
+  Future<void> reset();
+}
+
+/// Manages data export flow state
+class ExportProvider extends ChangeNotifier {
+  ExportFormat _format = ExportFormat.json;
+  ExportOptions _options = ExportOptions.all();
+  ExportStatus _status = ExportStatus.idle;
+  ExportMetadata? _metadata;
+  String? _exportPath;
+  String? _errorMessage;
+  
+  ExportFormat get format => _format;
+  ExportStatus get status => _status;
+  ExportMetadata? get metadata => _metadata;
+  String? get exportPath => _exportPath;
+  
+  /// Set export format
+  void setFormat(ExportFormat format);
+  
+  /// Set what to include in export
+  void setOptions(ExportOptions options);
+  
+  /// Load metadata (file size estimate, item counts)
+  Future<void> loadMetadata();
+  
+  /// Execute export
+  Future<void> export();
+  
+  /// Share the exported file
+  Future<void> shareExport();
+  
+  /// Reset for new export
+  void reset();
+}
+
+enum ExportFormat { json, csv }
+enum ExportStatus { idle, preparing, exporting, complete, error }
+
+class ExportOptions {
+  final bool includeContent;
+  final bool includeProgress;
+  final bool includeSettings;
+  
+  ExportOptions({
+    this.includeContent = true,
+    this.includeProgress = true,
+    this.includeSettings = true,
+  });
+  
+  factory ExportOptions.all() => ExportOptions();
+  factory ExportOptions.contentOnly() => ExportOptions(
+    includeProgress: false,
+    includeSettings: false,
+  );
 }
 ```
 
