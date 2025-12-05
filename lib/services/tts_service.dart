@@ -9,6 +9,9 @@ class TtsService {
 
   TtsService._internal();
 
+  /// Alias for initialize() for compatibility
+  Future<void> init() => initialize();
+
   Future<void> initialize() async {
     if (_isInitialized) return;
 
@@ -45,11 +48,33 @@ class TtsService {
   }
 
   Future<void> setLanguage(String language) async {
+    // Convert ISO 639-1 codes to TTS locale codes
+    final ttsLocale = _getLocaleForLanguage(language);
     try {
-      await _flutterTts.setLanguage(language);
+      await _flutterTts.setLanguage(ttsLocale);
     } catch (e) {
       // print('TTS setLanguage error: $e');
     }
+  }
+
+  /// Map language codes to TTS locale codes
+  String _getLocaleForLanguage(String language) {
+    const localeMap = {
+      'ja': 'ja-JP',
+      'ko': 'ko-KR',
+      'zh': 'zh-CN',
+      'es': 'es-ES',
+      'fr': 'fr-FR',
+      'de': 'de-DE',
+      'it': 'it-IT',
+      'pt': 'pt-BR',
+      'ru': 'ru-RU',
+      'ar': 'ar-SA',
+      'hi': 'hi-IN',
+      'th': 'th-TH',
+      'vi': 'vi-VN',
+    };
+    return localeMap[language] ?? language;
   }
 
   Future<void> setSpeechRate(double rate) async {
