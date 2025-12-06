@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _dueReviewCount = 0;
   // Total vocabulary is tracked via content counts
   Map<String, int> _contentCounts = {};
+  Map<String, int> _languageCounts = {};
   bool _isLoading = true;
 
   @override
@@ -37,9 +38,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isLoading = true);
     final dueCount = await _db.getDueReviewCount();
     final contentCounts = await _db.getContentCounts();
+    final languageCounts = await _db.getLanguageCounts();
     setState(() {
       _dueReviewCount = dueCount;
       _contentCounts = contentCounts;
+      _languageCounts = languageCounts;
       _isLoading = false;
     });
   }
@@ -109,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Ready to learn Japanese?',
+                        _buildWelcomeSubtitle(),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
@@ -126,43 +129,101 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildStatsCard() {
     final flashcardCount = _contentCounts['flashcard_set'] ?? 0;
     final quizCount = _contentCounts['quiz'] ?? 0;
+    final conversationCount = _contentCounts['conversation'] ?? 0;
+    final grammarCount = _contentCounts['grammar_lesson'] ?? 0;
+    final totalContent = _contentCounts.values.fold<int>(0, (sum, val) => sum + val);
 
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Your Progress',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatItem(
-                  icon: Icons.notifications_active,
-                  label: 'Due Reviews',
-                  value: '$_dueReviewCount',
-                  color: Colors.orange,
+    return InkWell(
+      onTap: _openLibrary,
+      borderRadius: BorderRadius.circular(12),
+      child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Your Progress',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          totalContent > 0
+                              ? '$totalContent items across ${_languageCounts.length} languages'
+                              : 'Start by creating or importing content',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.arrow_forward_ios, size: 16),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: [
+                  _buildStatItem(
+                    icon: Icons.notifications_active,
+                    label: 'Due Reviews',
+                    value: '$_dueReviewCount',
+                    color: Colors.orange,
+                  ),
+                  _buildStatItem(
+                    icon: Icons.style,
+                    label: 'Flashcards',
+                    value: '$flashcardCount',
+                    color: Colors.blue,
+                  ),
+                  _buildStatItem(
+                    icon: Icons.quiz,
+                    label: 'Quizzes',
+                    value: '$quizCount',
+                    color: Colors.purple,
+                  ),
+                  _buildStatItem(
+                    icon: Icons.chat,
+                    label: 'Conversations',
+                    value: '$conversationCount',
+                    color: Colors.green,
+                  ),
+                  _buildStatItem(
+                    icon: Icons.school,
+                    label: 'Grammar',
+                    value: '$grammarCount',
+                    color: Colors.teal,
+                  ),
+                ],
+              ),
+              if (_languageCounts.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Text(
+                  'Languages in your library',
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
-                _buildStatItem(
-                  icon: Icons.style,
-                  label: 'Flashcard Sets',
-                  value: '$flashcardCount',
-                  color: Colors.blue,
-                ),
-                _buildStatItem(
-                  icon: Icons.quiz,
-                  label: 'Quizzes',
-                  value: '$quizCount',
-                  color: Colors.purple,
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _languageCounts.entries.map((entry) {
+                    return Chip(
+                      label: Text('${_languageName(entry.key)} (${entry.value})'),
+                      avatar: const Icon(Icons.language, size: 16),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    );
+                  }).toList(),
                 ),
               ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -174,20 +235,33 @@ class _HomeScreenState extends State<HomeScreen> {
     required String value,
     required Color color,
   }) {
-    return Column(
-      children: [
-        Icon(icon, size: 48, color: color),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: color,
+    return Container(
+      width: 140,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withAlpha((0.08 * 255).round()),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 28, color: color),
+              const Spacer(),
+              Text(
+                value,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(label, style: Theme.of(context).textTheme.bodyMedium),
-      ],
+          const SizedBox(height: 4),
+          Text(label, style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
     );
   }
 
@@ -250,11 +324,49 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  String _buildWelcomeSubtitle() {
+    if (_languageCounts.isEmpty) {
+      return 'Ready to learn a new language?';
+    }
+
+    final languages = _languageCounts.keys.map(_languageName).toList();
+
+    if (languages.length == 1) {
+      return 'Ready to keep learning ${languages.first}?';
+    }
+
+    final preview = languages.take(2).join(', ');
+    final extraCount = languages.length - 2;
+    return extraCount > 0
+        ? 'Learning $preview and $extraCount more languages'
+        : 'Learning $preview';
+  }
+
   String _getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'おはよう！ (Good morning!)';
-    if (hour < 18) return 'こんにちは！ (Good afternoon!)';
-    return 'こんばんは！ (Good evening!)';
+    if (hour < 12) return 'Good morning!';
+    if (hour < 18) return 'Good afternoon!';
+    return 'Good evening!';
+  }
+
+  String _languageName(String code) {
+    const names = {
+      'ja': 'Japanese',
+      'ko': 'Korean',
+      'zh': 'Chinese',
+      'es': 'Spanish',
+      'fr': 'French',
+      'de': 'German',
+      'it': 'Italian',
+      'pt': 'Portuguese',
+      'ru': 'Russian',
+      'ar': 'Arabic',
+      'hi': 'Hindi',
+      'th': 'Thai',
+      'vi': 'Vietnamese',
+      'en': 'English',
+    };
+    return names[code] ?? code.toUpperCase();
   }
 
   Future<void> _startReview() async {
@@ -339,7 +451,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Generate personalized flashcards and quizzes using ChatGPT, Claude, or Gemini.',
+              'Generate flashcards, quizzes, conversations, and grammar lessons with your favorite LLM.',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),

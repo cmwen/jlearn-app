@@ -326,6 +326,31 @@ class DatabaseHelper {
     return counts;
   }
 
+  /// Get counts of content grouped by language (archived excluded by default)
+  Future<Map<String, int>> getLanguageCounts({bool includeArchived = false}) async {
+    final db = await database;
+
+    final result = await db.rawQuery(
+      includeArchived
+          ? 'SELECT language, COUNT(*) as count FROM content GROUP BY language'
+          : 'SELECT language, COUNT(*) as count FROM content WHERE is_archived = 0 GROUP BY language',
+    );
+
+    final counts = <String, int>{};
+    for (final row in result) {
+      counts[row['language'] as String] = row['count'] as int;
+    }
+    return counts;
+  }
+
+  /// Get list of available languages with content (archived excluded by default)
+  Future<List<String>> getLanguages({bool includeArchived = false}) async {
+    final counts = await getLanguageCounts(includeArchived: includeArchived);
+    final languages = counts.keys.toList()
+      ..sort((a, b) => a.compareTo(b));
+    return languages;
+  }
+
   /// Convert database map to Content object
   Content? _mapToContent(Map<String, dynamic> map) {
     final type = map['type'] as String;

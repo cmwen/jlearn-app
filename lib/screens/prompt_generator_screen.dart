@@ -31,6 +31,13 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
     {'code': 'es', 'name': 'Spanish'},
     {'code': 'fr', 'name': 'French'},
     {'code': 'de', 'name': 'German'},
+    {'code': 'it', 'name': 'Italian'},
+    {'code': 'pt', 'name': 'Portuguese'},
+    {'code': 'ru', 'name': 'Russian'},
+    {'code': 'ar', 'name': 'Arabic'},
+    {'code': 'hi', 'name': 'Hindi'},
+    {'code': 'th', 'name': 'Thai'},
+    {'code': 'vi', 'name': 'Vietnamese'},
   ];
 
   @override
@@ -152,6 +159,8 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
   }
 
   Widget _buildContentTypeSelector() {
+    final options = _promptService.getContentTypes();
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -163,26 +172,30 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-            SegmentedButton<ContentType>(
-              segments: const [
-                ButtonSegment(
-                  value: ContentType.flashcardSet,
-                  label: Text('Flashcards'),
-                  icon: Icon(Icons.style),
-                ),
-                ButtonSegment(
-                  value: ContentType.quiz,
-                  label: Text('Quiz'),
-                  icon: Icon(Icons.quiz),
-                ),
-              ],
-              selected: {_selectedType},
-              onSelectionChanged: (selected) {
-                setState(() {
-                  _selectedType = selected.first;
-                  _generatedPrompt = null;
-                });
-              },
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: options.map((option) {
+                final isSelected = _selectedType == option.type;
+                return ChoiceChip(
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(_iconFromName(option.icon), size: 18),
+                      const SizedBox(width: 6),
+                      Text(option.label),
+                    ],
+                  ),
+                  selected: isSelected,
+                  tooltip: option.description,
+                  onSelected: (_) {
+                    setState(() {
+                      _selectedType = option.type;
+                      _generatedPrompt = null;
+                    });
+                  },
+                );
+              }).toList(),
             ),
           ],
         ),
@@ -239,27 +252,30 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
               },
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    _selectedType == ContentType.flashcardSet
-                        ? 'Number of cards: $_itemCount'
-                        : 'Number of questions: $_itemCount',
+            if (_selectedType != ContentType.grammarLesson) ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(_buildCountLabel()),
                   ),
-                ),
-                Slider(
-                  value: _itemCount.toDouble(),
-                  min: 5,
-                  max: 20,
-                  divisions: 15,
-                  label: _itemCount.toString(),
-                  onChanged: (value) {
-                    setState(() => _itemCount = value.round());
-                  },
-                ),
-              ],
-            ),
+                  Slider(
+                    value: _itemCount.toDouble(),
+                    min: 4,
+                    max: 20,
+                    divisions: 16,
+                    label: _itemCount.toString(),
+                    onChanged: (value) {
+                      setState(() => _itemCount = value.round());
+                    },
+                  ),
+                ],
+              ),
+            ] else ...[
+              Text(
+                'Grammar lessons include sections and practice exercises. The prompt will request a full lesson plan.',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
           ],
         ),
       ),
@@ -304,6 +320,34 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
         ),
       ),
     );
+  }
+
+  String _buildCountLabel() {
+    switch (_selectedType) {
+      case ContentType.flashcardSet:
+        return 'Number of cards: $_itemCount';
+      case ContentType.quiz:
+        return 'Number of questions: $_itemCount';
+      case ContentType.conversation:
+        return 'Number of exchanges: $_itemCount';
+      case ContentType.grammarLesson:
+        return '';
+    }
+  }
+
+  IconData _iconFromName(String name) {
+    switch (name) {
+      case 'style':
+        return Icons.style;
+      case 'quiz':
+        return Icons.quiz;
+      case 'chat':
+        return Icons.chat;
+      case 'school':
+        return Icons.school;
+      default:
+        return Icons.auto_awesome;
+    }
   }
 
   Widget _buildPromptResult() {

@@ -24,6 +24,8 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
   List<Content> _content = [];
   bool _isLoading = true;
   String? _filterType;
+  String? _filterLanguage;
+  List<String> _languages = [];
   final bool _showArchived = false;
 
   @override
@@ -38,10 +40,13 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
     try {
       final content = await _db.getAllContent(
         type: _filterType,
+        language: _filterLanguage,
         includeArchived: _showArchived,
       );
+      final languages = await _db.getLanguages(includeArchived: _showArchived);
       setState(() {
         _content = content;
+        _languages = languages;
         _isLoading = false;
       });
     } catch (e) {
@@ -121,6 +126,23 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           PopupMenuButton<String?>(
+            icon: const Icon(Icons.language),
+            tooltip: 'Filter by language',
+            onSelected: (value) {
+              setState(() => _filterLanguage = value);
+              _loadContent();
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: null, child: Text('All Languages')),
+              ..._languages.map(
+                (lang) => PopupMenuItem(
+                  value: lang,
+                  child: Text(_languageLabel(lang)),
+                ),
+              ),
+            ],
+          ),
+          PopupMenuButton<String?>(
             icon: const Icon(Icons.filter_list),
             tooltip: 'Filter',
             onSelected: (value) {
@@ -154,9 +176,11 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
               onRefresh: _loadContent,
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
-                itemCount: _content.length,
+                itemCount: _content.length + 1,
                 itemBuilder: (context, index) {
-                  return _buildContentCard(_content[index]);
+                  if (index == 0) return _buildFilterSummary();
+                  final contentIndex = index - 1;
+                  return _buildContentCard(_content[contentIndex]);
                 },
               ),
             ),
@@ -187,6 +211,54 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFilterSummary() {
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text('Filters', style: textTheme.titleMedium),
+            const Spacer(),
+            Text('Showing ${_content.length} items', style: textTheme.bodySmall),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            FilterChip(
+              label: Text(
+                _filterType != null
+                    ? 'Type: ${_typeLabel(_filterType!)}'
+                    : 'All types',
+              ),
+              selected: _filterType != null,
+              onSelected: (_) {
+                setState(() => _filterType = null);
+                _loadContent();
+              },
+            ),
+            FilterChip(
+              label: Text(
+                _filterLanguage != null
+                    ? 'Language: ${_languageLabel(_filterLanguage!)}'
+                    : 'All languages',
+              ),
+              selected: _filterLanguage != null,
+              onSelected: (_) {
+                setState(() => _filterLanguage = null);
+                _loadContent();
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+      ],
     );
   }
 
@@ -259,6 +331,8 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                         const SizedBox(height: 4),
                         Row(
                           children: [
+                            _buildChip(_languageLabel(content.language)),
+                            const SizedBox(width: 8),
                             _buildChip(content.level),
                             const SizedBox(width: 8),
                             _buildChip('$itemCount $itemLabel'),
@@ -339,6 +413,41 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
         ),
       ),
     );
+  }
+
+  String _typeLabel(String value) {
+    switch (value) {
+      case 'flashcard_set':
+        return 'Flashcards';
+      case 'quiz':
+        return 'Quiz';
+      case 'conversation':
+        return 'Conversation';
+      case 'grammar_lesson':
+        return 'Grammar Lesson';
+      default:
+        return value;
+    }
+  }
+
+  String _languageLabel(String code) {
+    const names = {
+      'ja': 'Japanese',
+      'ko': 'Korean',
+      'zh': 'Chinese',
+      'es': 'Spanish',
+      'fr': 'French',
+      'de': 'German',
+      'it': 'Italian',
+      'pt': 'Portuguese',
+      'ru': 'Russian',
+      'ar': 'Arabic',
+      'hi': 'Hindi',
+      'th': 'Thai',
+      'vi': 'Vietnamese',
+      'en': 'English',
+    };
+    return names[code] ?? code.toUpperCase();
   }
 
   Widget _buildChip(String label) {

@@ -300,6 +300,7 @@ Important:
       'hi': 'Hindi',
       'th': 'Thai',
       'vi': 'Vietnamese',
+      'en': 'English',
     };
     return languageNames[code] ?? code;
   }

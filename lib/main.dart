@@ -11,7 +11,7 @@ class JLearnApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'JLearn - Japanese Learning',
+      title: 'JLearn - Language Learning',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.indigo,

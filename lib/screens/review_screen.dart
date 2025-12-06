@@ -52,7 +52,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
     });
   }
 
-  Future<void> _speakJapanese(String text) async {
+  Future<void> _speakText(String text) async {
     setState(() => _isSpeaking = true);
     await _tts.speak(text);
     await Future.delayed(const Duration(milliseconds: 500));
@@ -165,7 +165,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   ),
                   onPressed: _isSpeaking
                       ? null
-                      : () => _speakJapanese(_currentVocabulary!.word),
+                      : () => _speakText(_currentVocabulary!.word),
                   tooltip: 'Play audio',
                 ),
               ],
@@ -233,7 +233,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                           ),
                           onPressed: _isSpeaking
                               ? null
-                              : () => _speakJapanese(_currentVocabulary!.word),
+                              : () => _speakText(_currentVocabulary!.word),
                           tooltip: 'Play audio',
                         ),
                       ],
@@ -294,7 +294,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                       ),
                       onPressed: _isSpeaking
                           ? null
-                          : () => _speakJapanese(
+                          : () => _speakText(
                               _currentVocabulary!.exampleSentence!,
                             ),
                       tooltip: 'Play example',
