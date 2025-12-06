@@ -192,6 +192,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildActionCard() {
+    final hasContent = (_contentCounts['flashcard_set'] ?? 0) > 0 ||
+        (_contentCounts['quiz'] ?? 0) > 0;
+
     return Card(
       elevation: 4,
       child: Padding(
@@ -210,23 +213,36 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 12),
             ],
-            OutlinedButton.icon(
-              onPressed: _dueReviewCount > 0
-                  ? null
-                  : () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Great! You\'re all caught up! 🎉'),
-                        ),
-                      );
-                    },
-              icon: const Icon(Icons.school),
-              label: const Text('Learn New Words'),
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 56),
-                textStyle: const TextStyle(fontSize: 18),
+            if (!hasContent && _dueReviewCount == 0) ...[
+              Text(
+                '🚀 Get Started!',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
-            ),
+              const SizedBox(height: 12),
+              Text(
+                'Create your first learning content using AI. Tap the "Create" button below to generate flashcards or quizzes!',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ] else if (_dueReviewCount == 0) ...[
+              OutlinedButton.icon(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Great! You\'re all caught up! 🎉'),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.celebration),
+                label: const Text('All Caught Up!'),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 56),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
           ],
         ),
       ),
