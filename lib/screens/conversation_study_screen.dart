@@ -6,10 +6,7 @@ import '../services/tts_service.dart';
 class ConversationStudyScreen extends StatefulWidget {
   final Conversation conversation;
 
-  const ConversationStudyScreen({
-    super.key,
-    required this.conversation,
-  });
+  const ConversationStudyScreen({super.key, required this.conversation});
 
   @override
   State<ConversationStudyScreen> createState() =>
@@ -69,7 +66,8 @@ class _ConversationStudyScreenState extends State<ConversationStudyScreen> {
   @override
   Widget build(BuildContext context) {
     final message = widget.conversation.messages[_currentMessageIndex];
-    final progress = (_currentMessageIndex + 1) / widget.conversation.messages.length;
+    final progress =
+        (_currentMessageIndex + 1) / widget.conversation.messages.length;
 
     return Scaffold(
       appBar: AppBar(
@@ -87,7 +85,7 @@ class _ConversationStudyScreenState extends State<ConversationStudyScreen> {
         children: [
           // Progress indicator
           LinearProgressIndicator(value: progress),
-          
+
           // Main content
           Expanded(
             child: SingleChildScrollView(
@@ -120,12 +118,16 @@ class _ConversationStudyScreenState extends State<ConversationStudyScreen> {
                               Expanded(
                                 child: Text(
                                   message.text,
-                                  style: Theme.of(context).textTheme.headlineSmall,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineSmall,
                                 ),
                               ),
                               IconButton(
                                 icon: Icon(
-                                  _isSpeaking ? Icons.volume_up : Icons.volume_up_outlined,
+                                  _isSpeaking
+                                      ? Icons.volume_up
+                                      : Icons.volume_up_outlined,
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
                                 onPressed: () => _speakMessage(message.text),
@@ -226,7 +228,9 @@ class _ConversationStudyScreenState extends State<ConversationStudyScreen> {
                                 const SizedBox(width: 8),
                                 Text(
                                   'Note',
-                                  style: Theme.of(context).textTheme.labelMedium,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.labelMedium,
                                 ),
                               ],
                             ),
@@ -252,7 +256,9 @@ class _ConversationStudyScreenState extends State<ConversationStudyScreen> {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: _currentMessageIndex > 0 ? _previousMessage : null,
+                    onPressed: _currentMessageIndex > 0
+                        ? _previousMessage
+                        : null,
                     icon: const Icon(Icons.arrow_back),
                     label: const Text('Previous'),
                   ),
@@ -260,16 +266,20 @@ class _ConversationStudyScreenState extends State<ConversationStudyScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: _currentMessageIndex < widget.conversation.messages.length - 1
+                    onPressed:
+                        _currentMessageIndex <
+                            widget.conversation.messages.length - 1
                         ? _nextMessage
                         : () => Navigator.of(context).pop(),
                     icon: Icon(
-                      _currentMessageIndex < widget.conversation.messages.length - 1
+                      _currentMessageIndex <
+                              widget.conversation.messages.length - 1
                           ? Icons.arrow_forward
                           : Icons.check,
                     ),
                     label: Text(
-                      _currentMessageIndex < widget.conversation.messages.length - 1
+                      _currentMessageIndex <
+                              widget.conversation.messages.length - 1
                           ? 'Next'
                           : 'Finish',
                     ),
@@ -287,7 +297,11 @@ class _ConversationStudyScreenState extends State<ConversationStudyScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+      // avoid deprecated withOpacity usage
+      color: Theme.of(context)
+        .colorScheme
+        .primary
+        .withAlpha((0.1 * 255).round()),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -349,7 +363,8 @@ class _ConversationStudyScreenState extends State<ConversationStudyScreen> {
                   ),
                 ),
               ],
-              if (widget.conversation.vocabulary != null && widget.conversation.vocabulary!.isNotEmpty) ...[
+              if (widget.conversation.vocabulary != null &&
+                  widget.conversation.vocabulary!.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Text(
                   'Key Vocabulary',

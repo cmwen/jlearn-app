@@ -152,11 +152,18 @@ class _QuizStudyScreenState extends State<QuizStudyScreen> {
   }
 
   String _getResultMessage(int accuracy) {
-    if (accuracy >= 90) return 'Outstanding! You\'ve mastered this topic!';
-    if (accuracy >= 80) return 'Great work! Just a few more to perfect!';
-    if (accuracy >= 60)
+    if (accuracy >= 90) {
+      return 'Outstanding! You\'ve mastered this topic!';
+    }
+    if (accuracy >= 80) {
+      return 'Great work! Just a few more to perfect!';
+    }
+    if (accuracy >= 60) {
       return 'Good progress! Review the explanations to improve.';
-    if (accuracy >= 40) return 'You\'re on the right track! Keep studying.';
+    }
+    if (accuracy >= 40) {
+      return 'You\'re on the right track! Keep studying.';
+    }
     return 'This is a tough topic. Review and try again!';
   }
 

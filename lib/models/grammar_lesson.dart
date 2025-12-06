@@ -10,11 +10,11 @@ class GrammarLesson extends Content {
   final List<String>? relatedTopics;
 
   GrammarLesson({
-    required String id,
-    String schemaVersion = '1.0',
-    required String language,
-    required String level,
-    required ContentMetadata metadata,
+    required super.id,
+    super.schemaVersion = '1.0',
+    required super.language,
+    required super.level,
+    required super.metadata,
     required this.title,
     required this.summary,
     required this.sections,
@@ -24,18 +24,7 @@ class GrammarLesson extends Content {
     DateTime? updatedAt,
     bool isFavorite = false,
     bool isArchived = false,
-  }) : super(
-          id: id,
-          schemaVersion: schemaVersion,
-          type: 'grammar_lesson',
-          language: language,
-          level: level,
-          metadata: metadata,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          isFavorite: isFavorite,
-          isArchived: isArchived,
-        );
+  }) : super(type: 'grammar_lesson');
 
   factory GrammarLesson.fromJson(Map<String, dynamic> json, {String? id}) {
     return GrammarLesson(
@@ -72,8 +61,9 @@ class GrammarLesson extends Content {
       'summary': summary,
       'sections': sections.map((s) => s.toJson()).toList(),
       if (practiceExercises != null)
-        'practice_exercises':
-            practiceExercises!.map((e) => e.toJson()).toList(),
+        'practice_exercises': practiceExercises!
+            .map((e) => e.toJson())
+            .toList(),
       if (relatedTopics != null) 'related_topics': relatedTopics,
     };
   }
@@ -109,7 +99,8 @@ class GrammarSection {
       'heading': heading,
       'content': content,
       'type': type,
-      if (examples != null) 'examples': examples!.map((e) => e.toJson()).toList(),
+      if (examples != null)
+        'examples': examples!.map((e) => e.toJson()).toList(),
     };
   }
 }
@@ -152,10 +143,7 @@ class PracticeExercise {
   final String instruction;
   final List<ExerciseItem> items;
 
-  PracticeExercise({
-    required this.instruction,
-    required this.items,
-  });
+  PracticeExercise({required this.instruction, required this.items});
 
   factory PracticeExercise.fromJson(Map<String, dynamic> json) {
     return PracticeExercise(
@@ -180,11 +168,7 @@ class ExerciseItem {
   final String answer;
   final String? explanation;
 
-  ExerciseItem({
-    required this.prompt,
-    required this.answer,
-    this.explanation,
-  });
+  ExerciseItem({required this.prompt, required this.answer, this.explanation});
 
   factory ExerciseItem.fromJson(Map<String, dynamic> json) {
     return ExerciseItem(

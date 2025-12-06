@@ -81,8 +81,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
           grammarPoint: topic,
         );
         break;
-      default:
-        prompt = '';
+      // all enum cases handled above; no default needed
     }
 
     setState(() {

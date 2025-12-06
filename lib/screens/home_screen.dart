@@ -192,7 +192,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildActionCard() {
-    final hasContent = (_contentCounts['flashcard_set'] ?? 0) > 0 ||
+    final hasContent =
+        (_contentCounts['flashcard_set'] ?? 0) > 0 ||
         (_contentCounts['quiz'] ?? 0) > 0;
 
     return Card(
@@ -216,9 +217,9 @@ class _HomeScreenState extends State<HomeScreen> {
             if (!hasContent && _dueReviewCount == 0) ...[
               Text(
                 '🚀 Get Started!',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Text(

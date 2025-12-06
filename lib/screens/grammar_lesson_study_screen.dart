@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/grammar_lesson.dart';
-import 'package:flutter/gestures.dart';
+// removed unused import 'flutter/gestures.dart' — not used in this file
 
 /// Screen for studying grammar lesson content
 class GrammarLessonStudyScreen extends StatefulWidget {
   final GrammarLesson lesson;
 
-  const GrammarLessonStudyScreen({
-    super.key,
-    required this.lesson,
-  });
+  const GrammarLessonStudyScreen({super.key, required this.lesson});
 
   @override
   State<GrammarLessonStudyScreen> createState() =>
@@ -95,9 +92,8 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
                                 const SizedBox(width: 8),
                                 Text(
                                   'Summary',
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -117,8 +113,8 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
                   Text(
                     section.heading,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
 
@@ -136,7 +132,9 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: _currentSectionIndex > 0 ? _previousSection : null,
+                    onPressed: _currentSectionIndex > 0
+                        ? _previousSection
+                        : null,
                     icon: const Icon(Icons.arrow_back),
                     label: const Text('Previous'),
                   ),
@@ -225,7 +223,10 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.blue.shade100,
                     borderRadius: BorderRadius.circular(4),
@@ -244,8 +245,8 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
                   child: SelectableText(
                     example.original,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ],
@@ -258,7 +259,10 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.purple.shade100,
                       borderRadius: BorderRadius.circular(4),
@@ -277,8 +281,8 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
                     child: SelectableText(
                       example.conjugated!,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],
@@ -291,7 +295,10 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.green.shade100,
                     borderRadius: BorderRadius.circular(4),
@@ -387,8 +394,13 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
                         controller: scrollController,
                         itemCount: widget.lesson.practiceExercises!.length,
                         itemBuilder: (context, exerciseIdx) {
-                          final exercise = widget.lesson.practiceExercises![exerciseIdx];
-                          return _buildExerciseSection(exercise, exerciseIdx, setModalState);
+                          final exercise =
+                              widget.lesson.practiceExercises![exerciseIdx];
+                          return _buildExerciseSection(
+                            exercise,
+                            exerciseIdx,
+                            setModalState,
+                          );
                         },
                       ),
                     ),
@@ -423,9 +435,9 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
           children: [
             Text(
               exercise.instruction,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             ...exercise.items.asMap().entries.map((entry) {
@@ -447,18 +459,15 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
   ) {
     final userAnswer = _exerciseAnswers[key];
     final showAnswer = _showExerciseFeedback && userAnswer != null;
-    final isCorrect = userAnswer?.trim().toLowerCase() ==
-        item.answer.trim().toLowerCase();
+    final isCorrect =
+        userAnswer?.trim().toLowerCase() == item.answer.trim().toLowerCase();
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            item.prompt,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          Text(item.prompt, style: Theme.of(context).textTheme.bodyMedium),
           const SizedBox(height: 8),
           TextField(
             decoration: InputDecoration(
@@ -485,7 +494,9 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
                 color: isCorrect ? Colors.green.shade50 : Colors.red.shade50,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: isCorrect ? Colors.green.shade200 : Colors.red.shade200,
+                  color: isCorrect
+                      ? Colors.green.shade200
+                      : Colors.red.shade200,
                 ),
               ),
               child: Column(
@@ -495,7 +506,9 @@ class _GrammarLessonStudyScreenState extends State<GrammarLessonStudyScreen> {
                     isCorrect ? '✓ Correct!' : '✗ Incorrect',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: isCorrect ? Colors.green.shade900 : Colors.red.shade900,
+                      color: isCorrect
+                          ? Colors.green.shade900
+                          : Colors.red.shade900,
                     ),
                   ),
                   if (!isCorrect) ...[

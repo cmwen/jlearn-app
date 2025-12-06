@@ -10,11 +10,11 @@ class Conversation extends Content {
   final List<String>? characters;
 
   Conversation({
-    required String id,
-    String schemaVersion = '1.0',
-    required String language,
-    required String level,
-    required ContentMetadata metadata,
+    required super.id,
+    super.schemaVersion = '1.0',
+    required super.language,
+    required super.level,
+    required super.metadata,
     required this.messages,
     this.practicePrompts,
     this.vocabulary,
@@ -24,18 +24,7 @@ class Conversation extends Content {
     DateTime? updatedAt,
     bool isFavorite = false,
     bool isArchived = false,
-  }) : super(
-          id: id,
-          schemaVersion: schemaVersion,
-          type: 'conversation',
-          language: language,
-          level: level,
-          metadata: metadata,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          isFavorite: isFavorite,
-          isArchived: isArchived,
-        );
+  }) : super(type: 'conversation');
 
   factory Conversation.fromJson(Map<String, dynamic> json, {String? id}) {
     return Conversation(
@@ -55,11 +44,13 @@ class Conversation extends Content {
       vocabulary: (json['vocabulary'] as List<dynamic>?)
           ?.map((e) => VocabularyItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      context: (json['metadata'] as Map<String, dynamic>?)?['context'] as String?,
-      characters: ((json['metadata'] as Map<String, dynamic>?)?['characters']
-              as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList(),
+      context:
+          (json['metadata'] as Map<String, dynamic>?)?['context'] as String?,
+      characters:
+          ((json['metadata'] as Map<String, dynamic>?)?['characters']
+                  as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList(),
     );
   }
 

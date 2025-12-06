@@ -11,10 +11,7 @@ void main() {
 
     test('initializeSampleData completes without errors', () async {
       // Should complete without errors and without loading any data
-      await expectLater(
-        service.initializeSampleData(),
-        completes,
-      );
+      await expectLater(service.initializeSampleData(), completes);
     });
 
     test('initializeSampleData returns immediately', () async {

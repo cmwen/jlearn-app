@@ -239,13 +239,11 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: iconColor.withOpacity(0.1),
+                      // Avoid deprecated withOpacity; use withAlpha for consistent precision
+                      color: iconColor.withAlpha((0.1 * 255).round()),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(
-                      icon,
-                      color: iconColor,
-                    ),
+                    child: Icon(icon, color: iconColor),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
