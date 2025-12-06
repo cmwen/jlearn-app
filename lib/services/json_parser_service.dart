@@ -2,6 +2,8 @@ import 'dart:convert';
 import '../models/content.dart';
 import '../models/flashcard_set.dart';
 import '../models/quiz.dart';
+import '../models/conversation.dart';
+import '../models/grammar_lesson.dart';
 
 /// Result of parsing JSON content
 class ParseResult {
@@ -81,10 +83,16 @@ class JsonParserService {
           return _parseFlashcardSet(json);
         case 'quiz':
           return _parseQuiz(json);
+        case 'conversation':
+          return _parseConversation(json);
+        case 'grammar_lesson':
+          return _parseGrammarLesson(json);
         default:
           return ParseResult.error(
             'Unknown content type: $type',
-            suggestions: ['Supported types: flashcard_set, quiz'],
+            suggestions: [
+              'Supported types: flashcard_set, quiz, conversation, grammar_lesson',
+            ],
           );
       }
     } catch (e) {
@@ -191,6 +199,93 @@ class JsonParserService {
 
     final quiz = Quiz.fromJson(json);
     return ParseResult.success(quiz);
+  }
+
+  /// Parse conversation JSON
+  ParseResult _parseConversation(Map<String, dynamic> json) {
+    // Validate required fields
+    if (!json.containsKey('messages')) {
+      return ParseResult.error(
+        'Missing "messages" array in conversation',
+        suggestions: ['Add a "messages" array with message objects'],
+      );
+    }
+
+    final messages = json['messages'];
+    if (messages is! List || messages.isEmpty) {
+      return ParseResult.error(
+        'Messages must be a non-empty array',
+        suggestions: ['Add at least 2 messages to create a conversation'],
+      );
+    }
+
+    // Validate each message
+    for (int i = 0; i < messages.length; i++) {
+      final msg = messages[i];
+      if (msg is! Map<String, dynamic>) {
+        return ParseResult.error('Message at index $i is not a valid object');
+      }
+
+      final requiredFields = ['speaker', 'text', 'translation'];
+      for (final field in requiredFields) {
+        if (!msg.containsKey(field)) {
+          return ParseResult.error(
+            'Message at index $i missing "$field" field',
+            suggestions: [
+              'Each message must have: ${requiredFields.join(", ")}',
+            ],
+          );
+        }
+      }
+    }
+
+    final conversation = Conversation.fromJson(json);
+    return ParseResult.success(conversation);
+  }
+
+  /// Parse grammar lesson JSON
+  ParseResult _parseGrammarLesson(Map<String, dynamic> json) {
+    // Validate required fields
+    final requiredFields = ['title', 'summary', 'sections'];
+    for (final field in requiredFields) {
+      if (!json.containsKey(field)) {
+        return ParseResult.error(
+          'Missing "$field" field in grammar lesson',
+          suggestions: ['Add a "$field" field to the grammar lesson'],
+        );
+      }
+    }
+
+    final sections = json['sections'];
+    if (sections is! List || sections.isEmpty) {
+      return ParseResult.error(
+        'Sections must be a non-empty array',
+        suggestions: ['Add at least one section to the grammar lesson'],
+      );
+    }
+
+    // Validate each section
+    for (int i = 0; i < sections.length; i++) {
+      final section = sections[i];
+      if (section is! Map<String, dynamic>) {
+        return ParseResult.error('Section at index $i is not a valid object');
+      }
+
+      final sectionRequiredFields = ['heading', 'content', 'type'];
+      for (final field in sectionRequiredFields) {
+        if (!section.containsKey(field)) {
+          return ParseResult.error(
+            'Section at index $i missing "$field" field',
+            suggestions: [
+              'Each section must have: ${sectionRequiredFields.join(", ")}',
+            ],
+          );
+        }
+      }
+    }
+
+    final grammarLesson = GrammarLesson.fromJson(json);
+    return ParseResult.success(grammarLesson);
   }
 
   /// Extract JSON from markdown code blocks or raw text

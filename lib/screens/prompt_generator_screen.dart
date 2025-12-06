@@ -66,6 +66,21 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
           questionCount: _itemCount,
         );
         break;
+      case ContentType.conversation:
+        prompt = _promptService.generateConversationPrompt(
+          language: _selectedLanguage,
+          level: _selectedLevel,
+          situation: topic,
+          exchangeCount: _itemCount,
+        );
+        break;
+      case ContentType.grammarLesson:
+        prompt = _promptService.generateGrammarPrompt(
+          language: _selectedLanguage,
+          level: _selectedLevel,
+          grammarPoint: topic,
+        );
+        break;
       default:
         prompt = '';
     }
