@@ -6,6 +6,8 @@ import '../models/review_card.dart';
 import '../models/content.dart';
 import '../models/flashcard_set.dart';
 import '../models/quiz.dart';
+import '../models/conversation.dart';
+import '../models/grammar_lesson.dart';
 import '../models/user_profile.dart';
 
 class DatabaseHelper {
@@ -335,6 +337,10 @@ class DatabaseHelper {
         return FlashcardSet.fromJson(jsonData, id: map['id'] as String);
       case 'quiz':
         return Quiz.fromJson(jsonData, id: map['id'] as String);
+      case 'conversation':
+        return Conversation.fromJson(jsonData, id: map['id'] as String);
+      case 'grammar_lesson':
+        return GrammarLesson.fromJson(jsonData, id: map['id'] as String);
       default:
         return null;
     }

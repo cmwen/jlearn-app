@@ -3,8 +3,12 @@ import '../data/database_helper.dart';
 import '../models/content.dart';
 import '../models/flashcard_set.dart';
 import '../models/quiz.dart';
+import '../models/conversation.dart';
+import '../models/grammar_lesson.dart';
 import 'flashcard_study_screen.dart';
 import 'quiz_study_screen.dart';
+import 'conversation_study_screen.dart';
+import 'grammar_lesson_study_screen.dart';
 
 /// Screen for browsing and managing saved content
 class ContentLibraryScreen extends StatefulWidget {
@@ -60,6 +64,18 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
     } else if (content is Quiz) {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => QuizStudyScreen(quiz: content)),
+      );
+    } else if (content is Conversation) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ConversationStudyScreen(conversation: content),
+        ),
+      );
+    } else if (content is GrammarLesson) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => GrammarLessonStudyScreen(lesson: content),
+        ),
       );
     }
   }
@@ -118,6 +134,14 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                 child: Text('Flashcards'),
               ),
               const PopupMenuItem(value: 'quiz', child: Text('Quizzes')),
+              const PopupMenuItem(
+                value: 'conversation',
+                child: Text('Conversations'),
+              ),
+              const PopupMenuItem(
+                value: 'grammar_lesson',
+                child: Text('Grammar Lessons'),
+              ),
             ],
           ),
         ],
@@ -167,11 +191,38 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
   }
 
   Widget _buildContentCard(Content content) {
-    final isFlashcard = content is FlashcardSet;
-    final itemCount = isFlashcard
-        ? content.cards.length
-        : (content as Quiz).questions.length;
-    final itemLabel = isFlashcard ? 'cards' : 'questions';
+    // Determine content type info
+    IconData icon;
+    Color iconColor;
+    int itemCount;
+    String itemLabel;
+
+    if (content is FlashcardSet) {
+      icon = Icons.style;
+      iconColor = Colors.blue;
+      itemCount = content.cards.length;
+      itemLabel = 'cards';
+    } else if (content is Quiz) {
+      icon = Icons.quiz;
+      iconColor = Colors.purple;
+      itemCount = content.questions.length;
+      itemLabel = 'questions';
+    } else if (content is Conversation) {
+      icon = Icons.chat;
+      iconColor = Colors.green;
+      itemCount = content.messages.length;
+      itemLabel = 'messages';
+    } else if (content is GrammarLesson) {
+      icon = Icons.school;
+      iconColor = Colors.orange;
+      itemCount = content.sections.length;
+      itemLabel = 'sections';
+    } else {
+      icon = Icons.article;
+      iconColor = Colors.grey;
+      itemCount = 0;
+      itemLabel = 'items';
+    }
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -188,14 +239,12 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: isFlashcard
-                          ? Colors.blue.withValues(alpha: 0.1)
-                          : Colors.purple.withValues(alpha: 0.1),
+                      color: iconColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
-                      isFlashcard ? Icons.style : Icons.quiz,
-                      color: isFlashcard ? Colors.blue : Colors.purple,
+                      icon,
+                      color: iconColor,
                     ),
                   ),
                   const SizedBox(width: 12),
