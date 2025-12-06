@@ -7,6 +7,5 @@ class SampleDataService {
   Future<void> initializeSampleData() async {
     // No sample data is loaded anymore
     // Users should generate their own content using LLM integration
-    return;
   }
 }
