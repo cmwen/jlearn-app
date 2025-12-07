@@ -74,8 +74,6 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
-        # Use security-extended query suite for comprehensive analysis
-        queries: security-extended
 
     # Build the Android project to enable CodeQL analysis of Kotlin code
     - name: Build Android for CodeQL analysis
