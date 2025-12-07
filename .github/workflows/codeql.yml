@@ -81,17 +81,7 @@ jobs:
     - name: Build Android for CodeQL analysis
       if: matrix.language == 'java-kotlin'
       working-directory: android
-      run: |
-        echo "=== debug: list android directory ==="
-        ls -la
-        if [ ! -f ./gradlew ]; then
-          echo "gradlew missing in $(pwd) — printing repo root for debugging"
-          ls -la ..
-          exit 1
-        fi
-        # Ensure gradlew is executable on the runner before executing
-        chmod +x ./gradlew || true
-        ./gradlew assembleDebug --no-daemon
+      run: ./gradlew assembleDebug --no-daemon
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
