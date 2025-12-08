@@ -48,7 +48,7 @@ dependencies:
   # State management
   provider: ^6.1.2
   # Share/export functionality
-  share_plus: ^10.1.4
+  share_plus: ^12.0.1
 
 dev_dependencies:
   flutter_test:
