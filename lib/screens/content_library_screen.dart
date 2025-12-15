@@ -223,7 +223,10 @@ class _ContentLibraryScreenState extends State<ContentLibraryScreen> {
           children: [
             Text('Filters', style: textTheme.titleMedium),
             const Spacer(),
-            Text('Showing ${_content.length} items', style: textTheme.bodySmall),
+            Text(
+              'Showing ${_content.length} items',
+              style: textTheme.bodySmall,
+            ),
           ],
         ),
         const SizedBox(height: 8),
