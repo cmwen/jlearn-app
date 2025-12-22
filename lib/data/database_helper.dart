@@ -327,7 +327,9 @@ class DatabaseHelper {
   }
 
   /// Get counts of content grouped by language (archived excluded by default)
-  Future<Map<String, int>> getLanguageCounts({bool includeArchived = false}) async {
+  Future<Map<String, int>> getLanguageCounts({
+    bool includeArchived = false,
+  }) async {
     final db = await database;
 
     final result = await db.rawQuery(
@@ -346,8 +348,7 @@ class DatabaseHelper {
   /// Get list of available languages with content (archived excluded by default)
   Future<List<String>> getLanguages({bool includeArchived = false}) async {
     final counts = await getLanguageCounts(includeArchived: includeArchived);
-    final languages = counts.keys.toList()
-      ..sort((a, b) => a.compareTo(b));
+    final languages = counts.keys.toList()..sort((a, b) => a.compareTo(b));
     return languages;
   }
 
