@@ -255,9 +255,7 @@ class _PromptGeneratorScreenState extends State<PromptGeneratorScreen> {
             if (_selectedType != ContentType.grammarLesson) ...[
               Row(
                 children: [
-                  Expanded(
-                    child: Text(_buildCountLabel()),
-                  ),
+                  Expanded(child: Text(_buildCountLabel())),
                   Slider(
                     value: _itemCount.toDouble(),
                     min: 4,
