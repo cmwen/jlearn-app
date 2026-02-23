@@ -131,7 +131,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final quizCount = _contentCounts['quiz'] ?? 0;
     final conversationCount = _contentCounts['conversation'] ?? 0;
     final grammarCount = _contentCounts['grammar_lesson'] ?? 0;
-    final totalContent = _contentCounts.values.fold<int>(0, (sum, val) => sum + val);
+    final totalContent = _contentCounts.values.fold<int>(
+      0,
+      (sum, val) => sum + val,
+    );
 
     return InkWell(
       onTap: _openLibrary,
@@ -215,7 +218,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   runSpacing: 8,
                   children: _languageCounts.entries.map((entry) {
                     return Chip(
-                      label: Text('${_languageName(entry.key)} (${entry.value})'),
+                      label: Text(
+                        '${_languageName(entry.key)} (${entry.value})',
+                      ),
                       avatar: const Icon(Icons.language, size: 16),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     );

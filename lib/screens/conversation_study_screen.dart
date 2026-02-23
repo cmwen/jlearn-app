@@ -297,11 +297,10 @@ class _ConversationStudyScreenState extends State<ConversationStudyScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-      // avoid deprecated withOpacity usage
-      color: Theme.of(context)
-        .colorScheme
-        .primary
-        .withAlpha((0.1 * 255).round()),
+        // avoid deprecated withOpacity usage
+        color: Theme.of(
+          context,
+        ).colorScheme.primary.withAlpha((0.1 * 255).round()),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
