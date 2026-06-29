@@ -39,16 +39,16 @@ dependencies:
   # Simple key-value storage for user preferences and small data
   shared_preferences: ^2.5.5
   # Access to device file system paths (documents, cache, temp directories)
-  path_provider: ^2.1.0
+  path_provider: ^2.1.6
   sqflite: ^2.4.3
   path: ^1.9.1
-  intl: ^0.20.2
+  intl: ^0.20.3
   uuid: ^4.5.3
   flutter_tts: ^4.2.5
   # State management
   provider: ^6.1.2
   # Share/export functionality
-  share_plus: ^13.1.0
+  share_plus: ^13.2.0
 
 dev_dependencies:
   flutter_test:
